@@ -19,6 +19,9 @@ const choices = [
   { key: "Quote", pkg: null },
 ] as const;
 type Key = (typeof choices)[number]["key"];
+/** Other parts of the page (the package comparison) pick a package by sending this event with the choice's key. */
+export const PICK_PACKAGE = "cc:pick-package";
+export type PickPackage = Key;
 const SELF = "self"; // host it yourself, no care plan
 
 const groups = [...new Set(menu.map((a) => a.group))];
@@ -112,7 +115,7 @@ export function PriceBuilder() {
   const over = needsQuote(sum, pages);
   const plan = carePlans.find((p) => p.label === care) ?? null;
   const careLine: Line | null = plan ? { label: plan.label, price: plan.price } : null;
-  const link = `${site.url}/${qs ? `?${qs}` : ""}#builder`;
+  const link = `${site.url}/estimate${qs ? `?${qs}` : ""}`;
   const text = message(pkgLine, lines, name, area, { care: careLine, pages, founding: isFounding, link });
   const firstYear = sum != null && plan ? { monthly: sum + plan.price * 12, yearly: sum + plan.price * 10 } : null;
 
@@ -123,6 +126,19 @@ export function PriceBuilder() {
     setPick(nextPick);
     setQty(from > 0 && to > 0 && from !== to ? followPages(nextQty, perPageLabels, from, to) : nextQty);
   };
+  // A package picked elsewhere on the page (the comparison table); a ref keeps the listener on the latest update().
+  const updateRef = useRef(update);
+  useEffect(() => {
+    updateRef.current = update;
+  });
+  useEffect(() => {
+    const onPick = (e: Event) => {
+      const key = (e as CustomEvent<Key>).detail;
+      if (choices.some((c) => c.key === key)) updateRef.current(key, qty);
+    };
+    window.addEventListener(PICK_PACKAGE, onPick);
+    return () => window.removeEventListener(PICK_PACKAGE, onPick);
+  }, [qty]);
   const maxFor = (a: AddOn) => (perPageLabels.includes(a.label) ? Math.min(MAX_PAGES, pages) : MAX_PAGES);
   const set = (label: string, n: number) => {
     const a = menu.find((m) => m.label === label)!;
@@ -161,7 +177,7 @@ export function PriceBuilder() {
           {/* Choices */}
           <div className="space-y-10">
             <fieldset>
-              <legend className="font-heading text-xl">Start with a package</legend>
+              <legend className="font-heading text-2xl">1. Start with a package</legend>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {choices.map((c) => (
                   <label
@@ -202,7 +218,7 @@ export function PriceBuilder() {
             {pkgLine ? (
               <div>
                 <div className="flex items-baseline justify-between gap-4">
-                  <h4 className="font-heading text-xl">Add what you need</h4>
+                  <h4 className="font-heading text-2xl">2. Add what you need</h4>
                   {chosen.length > 0 && (
                     <button type="button" onClick={() => update(pick, {})} className="min-h-11 text-sm font-bold text-accent underline-offset-4 hover:underline">
                       Clear add-ons
@@ -212,8 +228,9 @@ export function PriceBuilder() {
                 <div className="mt-4 space-y-7">
                   {groups.map((g) => (
                     <fieldset key={g}>
-                      <legend className="mb-3 text-sm font-bold text-ink/80">{g}</legend>
-                      <div className="grid items-start gap-2.5 sm:grid-cols-2">
+                      <legend className="mb-2.5 text-sm font-bold text-ink/80">{g}</legend>
+                      {/* one ruled sheet per group: 1px gaps over the line colour draw the rules between rows */}
+                      <div className="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
                         {menu
                           .filter((a) => a.group === g && fits(a, pkg?.label))
                           .map((a) => {
@@ -223,11 +240,9 @@ export function PriceBuilder() {
                             return (
                               <div
                                 key={a.label}
-                                className={`rounded-xl border transition-colors ${
-                                  inPkg ? "border-dashed border-ink/25" : on ? "border-accent bg-sage-wash" : "border-line bg-surface hover:border-ink/40"
-                                }`}
+                                className={`transition-colors sm:last:odd:col-span-2 ${inPkg ? "bg-page" : on ? "bg-sage-wash" : "bg-surface hover:bg-sage-wash/50"}`}
                               >
-                                <label className={`flex min-h-14 items-center gap-3 px-4 py-3 ${inPkg ? "" : "cursor-pointer"}`}>
+                                <label className={`flex min-h-12 items-center gap-3 px-4 py-2.5 ${inPkg ? "text-ink/80" : "cursor-pointer"}`}>
                                   <input
                                     type="checkbox"
                                     checked={on || inPkg}
@@ -306,7 +321,7 @@ export function PriceBuilder() {
 
             {/* Monthly care: needed for hosting, so it belongs in the estimate (PDF 6.5). */}
             <fieldset>
-              <legend className="font-heading text-xl">Keep it running</legend>
+              <legend className="font-heading text-2xl">3. Keep it running</legend>
               <p className="mt-1 text-sm text-ink/80">Hosting, renewals and small edits.</p>
               <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                 {[...carePlans.map((p) => ({ key: p.label, title: p.label, note: `${aed(p.price)} a month` })), { key: SELF, title: "No plan", note: "I'll host it myself" }].map(
@@ -327,7 +342,9 @@ export function PriceBuilder() {
           </div>
 
           {/* Receipt: sticky beside the choices on desktop */}
-          <aside id="estimate" aria-label="Your estimate" className="rounded-2xl bg-ink p-6 text-surface shadow-[0_24px_48px_-24px_rgb(23_33_27/0.55)] sm:p-7 lg:sticky lg:top-6">
+          {/* the shadow sits on a wrapper: the receipt's torn edge is a mask, which would clip a box-shadow */}
+          <div className="drop-shadow-[0_22px_22px_rgb(23_33_27/0.28)] lg:sticky lg:top-6">
+          <aside id="estimate" aria-label="Your estimate" className="receipt-edge rounded-t-2xl bg-ink p-6 pb-10 text-surface sm:p-7 sm:pb-11">
             <h4 className="font-heading text-xl">Your estimate</h4>
 
             <ul className="mt-5 space-y-2.5 text-sm">
@@ -358,7 +375,7 @@ export function PriceBuilder() {
             </ul>
             {pkgLine && chosen.length === 0 && <p className="mt-2 text-sm text-surface/80">No add-ons yet.</p>}
 
-            <div className="mt-6 border-t border-white/20 pt-5" aria-live="polite">
+            <div className="mt-6 border-t border-dashed border-white/30 pt-5" aria-live="polite">
               <p className="text-sm text-surface/80">{kicker}</p>
               <motion.p key={headline} initial={{ opacity: 0.4, y: 4 }} animate={{ opacity: 1, y: 0 }} className="mt-1 font-heading text-4xl tabular-nums">
                 {headline}
@@ -372,7 +389,7 @@ export function PriceBuilder() {
               </p>
             </div>
 
-            <div className="mt-5 space-y-2 border-t border-white/20 pt-5 text-sm">
+            <div className="mt-5 space-y-2 border-t border-dashed border-white/30 pt-5 text-sm">
               <p className="flex justify-between gap-4">
                 <span>Care plan{plan ? `, ${plan.label}` : ""}</span>
                 <span className="tabular-nums">{plan ? `${aed(plan.price)} a month` : "None"}</span>
@@ -434,6 +451,7 @@ export function PriceBuilder() {
               </button>
             </div>
           </aside>
+          </div>
         </div>
 
         {/* Phones: the total stays docked at the bottom while the builder is on screen (the floating WhatsApp button hides). */}

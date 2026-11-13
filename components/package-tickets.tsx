@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Check } from "lucide-react";
 import AdmitOneTicket, { TICKET_LAYOUT, TICKET_TEXTURE } from "@/components/ui/admit-one-ticket";
 import { messages, packages, paymentTerms, wa } from "@/lib/site";
 import { QUOTE_THRESHOLD, aed } from "@/lib/quote";
@@ -56,14 +57,20 @@ function Ticket({ pkg, index }: { pkg: (typeof packages)[number]; index: number 
   );
 }
 
-/** The four build packages (PDF 6.2) as tickets, with what's included and a WhatsApp button under each. */
+/** The price builder's link for a package: Starter and Business are priced there, Pro and Store open its "Bigger site" choice. */
+export const estimateHref = (label: string) => `/estimate?p=${label === "Starter" || label === "Business" ? label.toLowerCase() : "quote"}`;
+
+/** The four build packages (PDF 6.2) as tickets, with what's included and a WhatsApp button under each.
+ *  The ticket itself opens the price builder with that package already picked. */
 export function PackageTickets() {
   return (
     <div className="mt-6 grid gap-x-8 gap-y-12 md:grid-cols-2">
       {packages.map((p, i) => (
         <article key={p.label}>
           <h4 className="sr-only">{p.label}</h4>
-          <Ticket pkg={p} index={i} />
+          <Link href={estimateHref(p.label)} aria-label={`Build an estimate with ${p.label}`} className="block rounded-2xl">
+            <Ticket pkg={p} index={i} />
+          </Link>
           {/* The ticket prints its price sideways on the stub; here it is again, flat and readable. */}
           <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
             <p className="font-heading text-3xl tabular-nums">
@@ -83,14 +90,23 @@ export function PackageTickets() {
               </li>
             ))}
           </ul>
-          <a
-            href={wa(messages.package(p.label))}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex min-h-11 items-center rounded-full border border-ink px-6 font-bold transition-colors hover:bg-ink hover:text-surface active:scale-[0.98]"
-          >
-            Ask about {p.label}
-          </a>
+          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <Link
+              href={estimateHref(p.label)}
+              className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-6 font-bold text-surface transition-colors hover:bg-ink/85 active:scale-[0.98]"
+            >
+              Build your estimate
+              <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <a
+              href={wa(messages.package(p.label))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center font-bold underline decoration-accent decoration-2 underline-offset-4 hover:decoration-ink"
+            >
+              Ask about {p.label}
+            </a>
+          </div>
         </article>
       ))}
     </div>

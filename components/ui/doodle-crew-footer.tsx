@@ -249,7 +249,7 @@ const DEFAULT_CREW: CrewMember[] = [
 const DEFAULT_COLUMNS: FooterColumn[] = [
   { title: "Our work", links: [{ label: "Wick & Web", href: "/#work" }, { label: "Kuru Kuru", href: "/#work" }, { label: "Tessara", href: "/#work" }] },
   { title: "Help", links: [{ label: "How it works", href: "/#how" }, { label: "Prices", href: "/#prices" }, { label: "FAQ", href: "/#faq" }] },
-  { title: "Company", links: [{ label: "Contact", href: "/#contact" }, { label: "WhatsApp", href: wa() }] },
+  { title: "Company", links: [{ label: "WhatsApp", href: wa() }] },
 ]
 
 const DEFAULT_DOODLES: DoodleKind[] = ["star", "sparkle", "plane", "spiral", "heart", "sparkle"]

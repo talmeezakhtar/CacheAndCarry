@@ -55,7 +55,7 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 3. **Accountant**: confirm the 100% Starter rule and the 50/50 terms (second half before go-live), and the VAT wording once registered.
 4. **Measure the first three Starter builds**: fix the template if any run past about 4.5 hours.
 5. **Care+ review**: track take-up for 60 days; trim included edits rather than raise the price.
-6. **Same-day reply**: the contact band says "We'll reply on WhatsApp" until someone can promise same day.
+6. **Same-day reply**: no same-day reply promise appears anywhere until someone can keep it (the contact band was removed; the footer carries the last WhatsApp call).
 
 ## Avoid
 
@@ -69,7 +69,7 @@ These would mislead customers or break the PDF's own rules.
 - **Custom apps, software, paid ad campaigns, AI-visibility add-ons.** Set aside for now (9).
 - **Unsolicited follow-ups after a free listing check.** One message, public data only, opt-out line (9, 11).
 - **Keeping a client's domain.** Always registered in the client's name, in writing (6.5, 8).
-- **Stand-in hero video.** Decided: the hero keeps an autoplay video on every screen, phones included, overriding the PDF's "no autoplay video" target. For now `public/hero/hero.mp4` is a downloaded copy of the Prisma demo clip (16 MB, not ours to use, and off-brand per DESIGN.md), with `public/hero/poster.jpg` as a frame of it. Before launch, replace both with your own short, muted clip and a frame from it, compressed to about 2 to 3 MB, keeping the same file names. Reduced-motion visitors get the poster instead.
+- **Stand-in hero video.** Decided: the hero keeps an autoplay video on every screen, phones included, overriding the PDF's "no autoplay video" target. For now `public/hero/hero.mp4` (1920px, 4.6 MB) and `public/hero/hero-mobile.mp4` (1280px, 1.7 MB, served under 768px) are re-encoded copies of the Prisma demo clip (not ours to use, and off-brand per DESIGN.md), with `public/hero/poster.jpg` as a frame of it. Before launch, replace all three with your own short, muted clip and a frame from it, keeping the same file names; the encode command is in the comment above `PrismaHero` in `app/page.tsx`. Data Saver visitors get the poster only. Reduced-motion visitors get the poster instead.
 - **Review aids on the live site.** Structure-notes toggle and theme switcher must not ship (4.11). Neither is in this build.
 
 ### One conflict with an instruction you gave

@@ -17,6 +17,23 @@
   --color-ochre: #c9a45c;
   --color-ochre-deep: #a07a2e; /* "quoted separately" marks */
   --font-sans: var(--font-manrope), system-ui, sans-serif;
+
+  /* shadcn token names, mapped onto the palette above so components/ui pieces drop in without their own colours.
+     chart-1 is plan B and gains (moss: chosen or included), chart-3 plan A (ink), chart-5 losses (deep ochre). */
+  --color-background: var(--color-page);
+  --color-foreground: var(--color-ink);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-ink);
+  --color-muted: var(--color-sage-wash);
+  --color-muted-foreground: #454d48; /* ink at 80% on linen, as a solid colour so it survives tinted fills */
+  --color-border: var(--color-line);
+  --color-ring: var(--color-accent);
+  --color-primary: var(--color-ink);
+  --color-primary-foreground: var(--color-surface);
+  --color-chart-1: var(--color-accent);
+  --color-chart-2: var(--color-accent);
+  --color-chart-3: var(--color-ink);
+  --color-chart-5: var(--color-ochre-deep);
 }
 
 html {
@@ -33,6 +50,20 @@ html {
 body {
   background: var(--color-page);
   color: var(--color-ink);
+}
+
+/* Text selection in the palette, not the browser's blue. */
+::selection {
+  background: var(--color-sage-tint);
+  color: var(--color-ink);
+}
+
+/* The estimate panel's torn receipt edge: a row of half-circle teeth cut into the bottom. */
+.receipt-edge {
+  --tooth: 14px;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tooth) / 2) no-repeat,
+    radial-gradient(circle at 50% 0, #000 calc(var(--tooth) / 2 - 0.5px), #0000 calc(var(--tooth) / 2)) bottom / var(--tooth) calc(var(--tooth) / 2) repeat-x;
 }
 
 /* Film grain for the hero video. */

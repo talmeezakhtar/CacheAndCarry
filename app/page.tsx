@@ -1,17 +1,16 @@
-import { Check, Clock, KeyRound, Languages, Minus, Tag } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Check, Clock, KeyRound, Languages, Minus, Tag } from "lucide-react";
 import { PrismaHero } from "@/components/ui/prisma-hero";
 import { ProjectDeck } from "@/components/ui/scroll-stacking-cards";
 import HowItWorks from "@/components/ui/how-it-works";
 import DoodleCrewFooter from "@/components/ui/doodle-crew-footer";
-import { PriceBuilder } from "@/components/price-builder";
 import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 import { AnnouncementBar } from "@/components/announcement-bar";
 import { PackageTickets } from "@/components/package-tickets";
 import { FaqDrawer } from "@/components/ui/faq-drawer";
-import { PackageCompare } from "@/components/package-compare";
 import Pricing6, { type Plan6 } from "@/components/ui/components-pricings-pricing-6";
 import { carePlans, demos, faqs, founding, included, messages, packages, site, smallEdit, wa } from "@/lib/site";
-import { WhatsAppIcon } from "@/components/whatsapp-icon";
+import { SiteNav } from "@/components/site-nav";
 import { aed } from "@/lib/quote";
 
 const wrap = "mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8";
@@ -24,8 +23,8 @@ const trust = [
   { title: site.delivery, body: "Starter, once we have your content", icon: Clock },
   // links straight to the estimate builder; shows the founding price while places are left
   founding.left > 0
-    ? { title: `From ${aed(founding.price)}`, body: `Founding price, ${founding.left} ${founding.left < founding.places ? "left" : "places"}`, href: "#builder", icon: Tag }
-    : { title: `From ${aed(packages[0].price)}`, body: "Fixed, published prices", href: "#builder", icon: Tag },
+    ? { title: `From ${aed(founding.price)}`, body: `Founding price, ${founding.left} ${founding.left < founding.places ? "left" : "places"}`, href: "/estimate?f=1", icon: Tag }
+    : { title: `From ${aed(packages[0].price)}`, body: "Fixed, published prices", href: "/estimate", icon: Tag },
   { title: "Arabic too", body: "On request", icon: Languages },
   { title: "You own it", body: "Domain in your name", icon: KeyRound },
 ];
@@ -61,8 +60,6 @@ const carePlan = (p: (typeof carePlans)[number], yearly: boolean): Plan6 => {
   };
 };
 
-// [label, section id, shorter label for phones]. Phones also drop Contact: the WhatsApp button is the contact.
-const nav = [["Our work", "work", "Work"], ["How it works", "how", "Process"], ["Prices", "prices"], ["FAQ", "faq"], ["Contact", "contact"]];
 
 // Structured data (PDF section 2): the business, its confirmed build prices, and the FAQ.
 const jsonLd = [
@@ -111,32 +108,13 @@ export default function Home() {
 
         {/* Hero, with the nav tab hanging from its top edge (scrolls away with the page) */}
         <div className="relative min-h-0 flex-1">
-          <nav
-            aria-label="Main"
-            className="absolute left-1/2 top-0 z-40 flex w-max max-w-[calc(100vw-1rem)] -translate-x-1/2 items-center gap-1 rounded-b-2xl bg-ink py-1.5 pl-2 pr-1.5 text-sm text-surface/80 md:gap-3 md:rounded-b-3xl md:pl-5 md:pr-2"
-          >
-            {/* Only the links scroll on narrow screens; the WhatsApp button always stays in view. */}
-            <div className="flex min-w-0 items-center overflow-x-auto [scrollbar-width:none] md:gap-3">
-              {/* Phones drop "Contact": the WhatsApp button beside it is the contact, and the rest then fit without hidden scrolling. */}
-              {nav.map(([label, id, short]) => (
-                <a
-                  key={id}
-                  href={`#${id}`}
-                  className={`flex min-h-11 shrink-0 items-center px-1.5 transition-colors sm:px-2 hover:text-surface ${id === "contact" ? "max-sm:hidden" : ""}`}
-                >
-                  {short ? (<><span className="sm:hidden">{short}</span><span className="max-sm:hidden">{label}</span></>) : label}
-                </a>
-              ))}
-            </div>
-            <a href={wa()} {...ext} className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full bg-surface px-4 font-bold text-ink transition-colors hover:bg-page">
-              <WhatsAppIcon className="size-4" />
-              WhatsApp
-            </a>
-          </nav>
-          {/* TODO before launch: public/hero/hero.mp4 is a temporary stand-in (copied from the Prisma demo, not ours to keep).
-              Replace it and poster.jpg (a frame of it) with your own clip; keep the same file names and nothing else changes. */}
+          <SiteNav className="absolute left-1/2 top-0 -translate-x-1/2" />
+          {/* TODO before launch: the hero clips are a temporary stand-in (the Prisma demo, not ours to keep).
+              Replace hero.mp4 (1920px), hero-mobile.mp4 (1280px) and poster.jpg with your own; keep the file names.
+              Encode: ffmpeg -i in.mp4 -an -c:v libx264 -preset veryslow -crf 20 -tune film -pix_fmt yuv420p -movflags +faststart [-vf scale=1280:-2] out.mp4 */}
           <PrismaHero
             video="/hero/hero.mp4"
+            videoSmall="/hero/hero-mobile.mp4"
             poster="/hero/poster.jpg"
             whatsappHref={wa()}
           />
@@ -236,17 +214,25 @@ export default function Home() {
               </div>
             </div>
 
-            <h3 className="mt-16 font-heading text-3xl md:mt-20">3. Build your estimate</h3>
-            <p className="mt-2 text-ink/80">
-              Pick a package and add what you need. Not sure?{" "}
-              <a href={wa(messages.starter)} {...ext} className="font-bold text-ink underline decoration-accent decoration-2 underline-offset-4 hover:decoration-ink">
-                Start with Starter
-              </a>
-              .
-            </p>
-            <PackageCompare />
-            <div className="mt-8">
-              <PriceBuilder />
+            {/* The builder has its own page (/estimate), so this section stays a read; each ticket opens it with its package picked. */}
+            <div className="mt-16 flex flex-col gap-6 rounded-2xl bg-ink p-6 text-surface shadow-[0_24px_48px_-24px_rgb(23_33_27/0.55)] sm:p-10 md:mt-20 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h3 className="font-heading text-3xl">3. Build your estimate</h3>
+                <p className="mt-2 max-w-[52ch] text-surface/80">
+                  Pick a package, tick the extras and see the total, then send it to us on WhatsApp. Not sure?{" "}
+                  <a href={wa(messages.starter)} {...ext} className="font-bold text-surface underline decoration-sage-light decoration-2 underline-offset-4 hover:decoration-surface">
+                    Start with Starter
+                  </a>
+                  .
+                </p>
+              </div>
+              <Link
+                href="/estimate"
+                className="group inline-flex min-h-12 shrink-0 items-center gap-2 self-start rounded-full bg-surface px-7 font-bold text-ink transition-colors hover:bg-white active:scale-[0.98] md:self-center"
+              >
+                Open the price builder
+                <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </div>
           </div>
         </section>
@@ -263,16 +249,6 @@ export default function Home() {
           askHref={wa()}
         />
 
-        {/* 7 · Contact band (PDF 4.9). "Reply the same day" is held back until someone can promise it. */}
-        <section id="contact" className="bg-accent py-24 text-center text-surface md:py-32">
-          <div className={wrap}>
-            <h2 className="mx-auto max-w-[18ch] font-heading text-5xl leading-[1.05] tracking-tight md:text-6xl">Tell us what you sell.</h2>
-            <p className="mx-auto mt-5 max-w-[48ch] text-lg">Send your shop name and one photo on WhatsApp.</p>
-            <a href={wa()} {...ext} className="mt-8 inline-flex min-h-12 items-center rounded-full bg-surface px-8 text-lg font-bold text-ink transition-transform active:scale-[0.98]">
-              Chat on WhatsApp
-            </a>
-          </div>
-        </section>
         {/* fixed on screen, but kept inside main so it belongs to a landmark */}
         <FloatingWhatsApp href={wa(messages.float)} />
       </main>
