@@ -50,22 +50,23 @@ const Card = ({ number, step, className, rotate }: { number: string; step: Step;
   </li>
 );
 
+// Same scatter and tilt as before, packed tighter: each card starts right under the one two places up.
 const DEFAULT_CARD_POSITIONS: StepPosition[] = [
   { className: "md:absolute md:top-0 md:left-[15%]", rotate: "md:rotate-6" },
-  { className: "md:absolute md:top-[120px] md:right-[15%]", rotate: "md:-rotate-6" },
-  { className: "md:absolute md:top-[450px] md:left-[15%]", rotate: "md:rotate-6" },
-  { className: "md:absolute md:top-[570px] md:right-[10%]", rotate: "md:-rotate-6" },
-  { className: "md:absolute md:top-[850px] md:left-[15%]", rotate: "md:rotate-6" },
+  { className: "md:absolute md:top-[60px] md:right-[15%]", rotate: "md:-rotate-6" },
+  { className: "md:absolute md:top-[350px] md:left-[15%]", rotate: "md:rotate-6" },
+  { className: "md:absolute md:top-[410px] md:right-[10%]", rotate: "md:-rotate-6" },
+  { className: "md:absolute md:top-[700px] md:left-[15%]", rotate: "md:rotate-6" },
 ];
 
-const HEIGHTS = [0, 400, 450, 800, 900, 1130];
+const HEIGHTS = [0, 360, 420, 680, 740, 1040];
 
 // Curve segments joining card n to card n+1, in a 1000-wide viewBox.
 const SEGMENTS = [
-  "M 290 150 C 500 150, 550 270, 710 270",
-  " C 850 270, 500 350, 290 450",
-  " C 290 600, 550 720, 750 720",
-  " C 950 720, 500 800, 290 850",
+  "M 290 150 C 500 150, 550 210, 710 210",
+  " C 850 210, 500 260, 290 350",
+  " C 290 500, 550 560, 750 560",
+  " C 950 560, 500 640, 290 700",
 ];
 
 export default function HowItWorks({ features, className, stepPositions = DEFAULT_CARD_POSITIONS }: HowItWorksProps) {
@@ -77,7 +78,7 @@ export default function HowItWorks({ features, className, stepPositions = DEFAUL
   return (
     <MotionConfig reducedMotion="user">
       <LazyMotion features={domAnimation}>
-        <div className={`relative px-4 max-md:pb-16 max-md:pt-10 sm:px-8 md:py-16 ${className ?? ""}`}>
+        <div className={`relative px-4 max-md:pb-4 max-md:pt-6 sm:px-8 md:py-8 ${className ?? ""}`}>
           {/* lined paper, fading out at the sides */}
           <div
             aria-hidden

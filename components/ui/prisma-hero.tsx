@@ -1,8 +1,8 @@
 "use client";
 
-import { MotionConfig, motion, useInView, useReducedMotion } from "motion/react";
+import { MotionConfig, motion, useInView } from "motion/react";
 import { ArrowRight, Pause, Play } from "lucide-react";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const rise = (delay: number) => ({
@@ -32,30 +32,6 @@ export const WordsPullUp = ({ text, className = "" }: { text: string; className?
   );
 };
 
-const nouns = ["shop", "salon", "café", "boutique", "clinic"];
-
-/* The one looping word in the hero. Stops for reduced-motion users and when the visitor pauses the hero. */
-function RotatingNoun({ paused }: { paused: boolean }) {
-  const reduce = useReducedMotion();
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (reduce || paused) return;
-    const t = setInterval(() => setI((n) => (n + 1) % nouns.length), 2600);
-    return () => clearInterval(t);
-  }, [reduce, paused]);
-  return (
-    <motion.span
-      key={nouns[i]}
-      initial={{ y: 8, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.35 }}
-      className="inline-block italic text-sage-pale" /* pale sage: olive is unreadable over the dark video */
-    >
-      {nouns[i]}
-    </motion.span>
-  );
-}
-
 const MOTION_OK = "(prefers-reduced-motion: no-preference)";
 const onMotionChange = (cb: () => void) => {
   const mq = matchMedia(MOTION_OK);
@@ -68,7 +44,7 @@ const onMotionChange = (cb: () => void) => {
  * overlays, giant wordmark bottom-left, headline and the one WhatsApp action bottom-right.
  * The nav tab lives in the page so it can stay fixed while scrolling.
  */
-export function PrismaHero({ video, poster, whatsappHref }: { video?: string; poster: string; whatsappHref: string }) {
+export function PrismaHero({ video, videoSmall, poster, whatsappHref }: { video?: string; videoSmall?: string; poster: string; whatsappHref: string }) {
   // The video is added only after mount, and never for reduced motion: server and browser render the same poster,
   // and reduced-motion visitors never download the clip.
   const motionOk = useSyncExternalStore(onMotionChange, () => matchMedia(MOTION_OK).matches, () => false);
@@ -81,6 +57,10 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
     setPaused(!paused);
   };
   const media = "absolute inset-0 h-full w-full object-cover";
+  // Read only once motionOk is true, which is after hydration, so the server never touches window.
+  // Phones get the 1280px file (the hero is cropped to portrait there anyway); Data Saver gets the poster only.
+  const saveData = motionOk && (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+  const src = motionOk && videoSmall && matchMedia("(max-width: 767px)").matches ? videoSmall : video;
   return (
     <MotionConfig reducedMotion="user">
       {/* Fills its parent: the page gives the offer bar + hero one screen, so the hero is whatever the bar leaves. */}
@@ -90,7 +70,7 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
               so there is no black flash or pop while it loads. Full-quality file, never re-encoded here. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={poster} alt="" fetchPriority="high" className={media} />
-          {video && motionOk && (
+          {src && motionOk && !saveData && (
             <video
               ref={videoRef}
               autoPlay
@@ -99,7 +79,7 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
               playsInline
               preload="auto"
               disablePictureInPicture
-              src={video}
+              src={src}
               onPlaying={() => setPlaying(true)}
               // autoplay can start before React attaches onPlaying; timeupdate keeps firing, so this always catches it
               onTimeUpdate={() => !playing && setPlaying(true)}
@@ -109,7 +89,7 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
           <div className="noise-overlay pointer-events-none absolute inset-0 opacity-70 mix-blend-overlay" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
 
-          {motionOk && (
+          {motionOk && !saveData && (
             <button
               type="button"
               onClick={togglePause}
@@ -122,21 +102,19 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
           )}
 
           <div className="absolute inset-x-0 bottom-0 grid grid-cols-12 items-end gap-4 px-4 pb-6 sm:px-6 md:px-10 lg:pb-10">
-            <p
-              aria-hidden
-              className="col-span-12 font-heading text-[21vw] leading-[0.85] tracking-[-0.05em] lg:col-span-8 lg:text-[min(13vw,13.5rem)]"
-            >
-              <WordsPullUp text="Cache &" />
-              <WordsPullUp text="Carry" />
-            </p>
+            {/* The offer leads; the name is a small mark above it (the nav and the footer carry it too). */}
+            <div className="col-span-12 lg:col-span-8">
+              <motion.p {...rise(0.1)} className="font-heading text-2xl tracking-tight text-surface/90 md:text-3xl">
+                Cache &amp; Carry
+              </motion.p>
+              <h1 className="mt-3 font-heading text-[12.5vw] leading-[0.95] tracking-[-0.03em] sm:text-[9vw] lg:text-[min(6.6vw,6.75rem)]">
+                <WordsPullUp text={"Your business online in 5\u00a0working days."} />
+              </h1>
+            </div>
 
             <div className="col-span-12 flex flex-col items-start gap-5 lg:col-span-4">
-              <motion.h1 {...rise(0.4)} className="font-heading text-3xl leading-[1.1] md:text-4xl">
-                Your <RotatingNoun paused={paused} /> online in 5 working days.
-              </motion.h1>
-              <motion.p {...rise(0.55)} className="max-w-[42ch] leading-snug text-surface/85 md:text-lg">
-                Websites for small businesses in Sharjah and Dubai, in English and Arabic. A one-page Starter site goes live 5 working days after we
-                have your content.
+              <motion.p {...rise(0.55)} className="max-w-[40ch] leading-snug text-surface/85 md:text-lg">
+                English and Arabic websites for small businesses in Sharjah and Dubai.
               </motion.p>
               <motion.a
                 {...rise(0.7)}

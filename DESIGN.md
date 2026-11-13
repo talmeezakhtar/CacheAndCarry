@@ -132,7 +132,7 @@ The look rejects the flashy tech-startup register (neon, glows, purple gradients
 A muted moss-and-paper palette with one olive accent and a warm ochre used only as a second voice in pricing.
 
 ### Primary
-- **Olive Moss** (accent): links, ticks, the selected state's border and check, focus outlines, eyebrow labels, and the contact band background. It marks "this is chosen / this is included".
+- **Olive Moss** (accent): links, ticks, the selected state's border and check, focus outlines, eyebrow labels, and the founding-offer bar. It marks "this is chosen / this is included".
 
 ### Secondary
 - **Ochre** (ochre): the warm second voice in pricing, on the Pro ticket and the Growth care card, so the top tiers read differently from the green ones.
