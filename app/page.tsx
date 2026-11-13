@@ -11,28 +11,31 @@ import { FaqDrawer } from "@/components/ui/faq-drawer";
 import { PackageCompare } from "@/components/package-compare";
 import Pricing6, { type Plan6 } from "@/components/ui/components-pricings-pricing-6";
 import { carePlans, demos, faqs, founding, included, messages, packages, site, smallEdit, wa } from "@/lib/site";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { aed } from "@/lib/quote";
 
 const wrap = "mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8";
 const band = "py-16 md:py-28"; // 64px on phones, 112px on desktop (Tessara-style breathing room)
 const h2 = "font-heading text-4xl leading-[1.1] tracking-tight md:text-[3.5rem]";
-const eyebrow = "mb-3 text-sm font-bold uppercase tracking-[0.12em] text-accent";
 const ext = { target: "_blank", rel: "noopener noreferrer" };
 
 // Hero trust strip (PDF 4.4): the four worries answered before the work.
 const trust = [
-  { title: site.delivery, body: "Brief to live site", icon: Clock },
-  // links straight to the estimate builder
-  { title: `From ${aed(packages[0].price)}`, body: "Prices before VAT", href: "#builder", icon: Tag },
+  { title: site.delivery, body: "Starter, once we have your content", icon: Clock },
+  // links straight to the estimate builder; shows the founding price while places are left
+  founding.left > 0
+    ? { title: `From ${aed(founding.price)}`, body: `Founding price, ${founding.left} ${founding.left < founding.places ? "left" : "places"}`, href: "#builder", icon: Tag }
+    : { title: `From ${aed(packages[0].price)}`, body: "Fixed, published prices", href: "#builder", icon: Tag },
   { title: "Arabic too", body: "On request", icon: Languages },
   { title: "You own it", body: "Domain in your name", icon: KeyRound },
 ];
 
-// How it works (PDF 4.6). Step 2 says two rounds, to match the pricing rules.
+// How it works (PDF 4.6). Step 2 says two rounds, to match the pricing rules. The days are a Starter's, counted from
+// payment and content as the terms say; bigger builds follow the timeline in their quote.
 const steps = [
-  { title: "Message us on WhatsApp", when: "Day 0", body: "Send your name, what you sell and a few photos." },
+  { title: "Message us on WhatsApp", when: "Day 0", body: "Send your name, what you sell and a few photos. Day 0 is when we have these and your payment." },
   { title: "Review a first draft", when: "Day 1 to 3", body: "We send a draft. Two rounds of changes are included." },
-  { title: "Go live", when: "By day 5", body: "We connect your domain and hand over the login." },
+  { title: "Go live", when: "By day 5", body: "We connect your domain and hand over the login. Bigger sites follow the timeline in your quote." },
 ];
 
 // Care plans as pricing cards (PDF 6.5). Yearly = ten months' price for twelve (two months free).
@@ -46,30 +49,40 @@ const carePlan = (p: (typeof carePlans)[number], yearly: boolean): Plan6 => {
     palette: carePalettes[i],
     price: aed(yearly ? p.price * 10 : p.price),
     originalPrice: yearly ? aed(p.price * 12) : undefined,
-    priceNote: yearly ? "a year, paid up front" : "a month",
+    priceNote: yearly ? "a year" : "a month",
     featuredLabel: yearly ? "2 months free" : undefined,
     ctaLabel: `Ask about ${p.label}`,
     ctaHref: wa(messages.plan(p.label)),
     ctaDark: i === 1,
     features: p.items,
-    footerNote: "3-month minimum",
-    footerDesc: "Then monthly. Cancel with 30 days' notice.",
+    // yearly is prepaid and not refunded for unused months (terms); monthly has the 3-month minimum
+    footerNote: yearly ? "12 months, paid upfront" : "3-month minimum",
+    footerDesc: yearly ? "Unused months are not refunded." : "Then monthly. Cancel with 30 days' notice.",
   };
 };
 
 // [label, section id, shorter label for phones]. Phones also drop Contact: the WhatsApp button is the contact.
 const nav = [["Our work", "work", "Work"], ["How it works", "how", "Process"], ["Prices", "prices"], ["FAQ", "faq"], ["Contact", "contact"]];
 
-// Structured data (PDF section 2): the business and the FAQ. No Offer or price markup until prices are confirmed.
+// Structured data (PDF section 2): the business, its confirmed build prices, and the FAQ.
 const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: site.name,
     url: site.url,
+    telephone: site.phone,
     description: "Websites and Google listings for small shops in Sharjah and Dubai, in English and Arabic.",
     areaServed: ["Sharjah", "Dubai"],
     availableLanguage: ["en", "ar"],
+    priceRange: `${aed(packages[0].price)} to ${aed(packages[packages.length - 1].price)}`,
+    makesOffer: packages.map((p) => ({
+      "@type": "Offer",
+      name: `${p.label} website`,
+      description: p.note,
+      price: p.price,
+      priceCurrency: "AED",
+    })),
   },
   {
     "@context": "https://schema.org",
@@ -90,7 +103,7 @@ export default function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
-      <main>
+      <main id="main">
         {/* 0 + 1 · Founding offer bar and hero share one screen: the hero fills whatever height the bar leaves,
             so the WhatsApp button stays in view however many lines the bar wraps to (or after it is closed). */}
         <div className="flex h-[100dvh] min-h-[600px] flex-col">
@@ -115,7 +128,8 @@ export default function Home() {
                 </a>
               ))}
             </div>
-            <a href={wa()} {...ext} className="inline-flex min-h-11 shrink-0 items-center rounded-full bg-surface px-4 font-bold text-ink transition-colors hover:bg-page">
+            <a href={wa()} {...ext} className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full bg-surface px-4 font-bold text-ink transition-colors hover:bg-page">
+              <WhatsAppIcon className="size-4" />
               WhatsApp
             </a>
           </nav>
@@ -137,7 +151,7 @@ export default function Home() {
                 key={t.title}
                 className="flex flex-col items-start gap-2.5 border-line px-4 py-6 first:pl-0 sm:flex-row sm:items-center max-md:odd:pl-0 max-md:even:border-l max-md:[&:nth-child(n+3)]:border-t sm:gap-4 md:border-l md:first:border-l-0 md:pl-6"
               >
-                <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-[#e6ebdb] text-accent sm:size-11">
+                <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-sage-soft text-accent sm:size-11">
                   <t.icon className="size-5" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0">
@@ -179,7 +193,7 @@ export default function Home() {
         <section id="prices" className={band}>
           <div className={wrap}>
             <h2 className={`${h2} max-w-[22ch]`}>Build once, then keep it running.</h2>
-            <p className="mt-4 text-lg text-ink/80">All prices in AED, before VAT.</p>
+            <p className="mt-4 text-lg text-ink/80">All prices in AED.</p>
 
             <h3 className="mt-16 font-heading text-3xl md:mt-20">1. Build your site</h3>
             <PackageTickets />
@@ -199,10 +213,10 @@ export default function Home() {
             </div>
 
             {/* Important rule, so it gets colour: sage for what's included, white for what's quoted. */}
-            <p className={`mt-16 md:mt-20 ${eyebrow}`}>What counts as an edit</p>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border-2 border-accent bg-[#dfe6cf] p-6 shadow-sm sm:p-8">
-                <h3 className="font-heading text-2xl">Included in your plan</h3>
+            <h3 className="mt-16 font-heading text-3xl md:mt-20">What counts as an edit</h3>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border-2 border-accent bg-sage-tint p-6 shadow-sm sm:p-8">
+                <h4 className="font-heading text-2xl">Included in your plan</h4>
                 <ul className="mt-4 grid gap-2.5">
                   {smallEdit.inPlan.map((f) => (
                     <Tick key={f}>{f}</Tick>
@@ -210,11 +224,11 @@ export default function Home() {
                 </ul>
               </div>
               <div className="rounded-2xl border-2 border-ink/15 bg-surface p-6 shadow-sm sm:p-8">
-                <h3 className="font-heading text-2xl">Quoted separately</h3>
+                <h4 className="font-heading text-2xl">Quoted separately</h4>
                 <ul className="mt-4 grid gap-2.5">
                   {smallEdit.paid.map((f) => (
                     <li key={f} className="flex gap-3">
-                      <Minus aria-hidden className="mt-0.5 size-5 shrink-0 text-[#a07a2e]" />
+                      <Minus aria-hidden className="mt-0.5 size-5 shrink-0 text-ochre-deep" />
                       <span>{f}</span>
                     </li>
                   ))}
@@ -241,7 +255,6 @@ export default function Home() {
         <FaqDrawer
           id="faq"
           cards={faqs}
-          label="Questions"
           title="Before you message us."
           lead="Quick answers. Tap a card to open it."
           drawer="Cache & Carry · FAQ"
@@ -260,16 +273,18 @@ export default function Home() {
             </a>
           </div>
         </section>
+        {/* fixed on screen, but kept inside main so it belongs to a landmark */}
+        <FloatingWhatsApp href={wa(messages.float)} />
       </main>
 
       <DoodleCrewFooter
-        palette={{ background: "#17211b", ink: "#fcfcfa", accent: "#3f6b3a" }}
+        palette={{ background: "#17211b", ink: "#fcfcfa", accent: "#3f6b3a" }} /* ink, surface, accent: the footer draws with raw values */
+        tagline={`A Starter site online in ${site.delivery}.`}
         actions={[
           { label: "See our work", href: "#work", icon: "star", variant: "outline" },
           { label: "Chat on WhatsApp", href: wa(), icon: "plane", variant: "solid" },
         ]}
       />
-      <FloatingWhatsApp href={wa(messages.float)} />
     </>
   );
 }

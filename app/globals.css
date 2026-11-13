@@ -7,6 +7,15 @@
   --color-ink: #17211b; /* text and filled buttons */
   --color-accent: #3f6b3a; /* accent (the hero's rotating word uses a pale sage tint, see prisma-hero) */
   --color-line: rgb(23 33 27 / 0.13);
+  /* Sage and ochre family from DESIGN.md: selected fills, highlight panels, the warm "quoted separately" voice */
+  --color-sage-wash: #eef1e4; /* selected card or tile */
+  --color-sage-soft: #e6ebdb; /* icon discs, the middle care card */
+  --color-sage-tint: #dfe6cf; /* the "in your plan" panel */
+  --color-sage-pale: #c3d0a6; /* accent text over the dark hero video */
+  --color-sage-light: #b9c79e; /* accents on dark panels */
+  --color-ochre-wash: #f4ecda; /* the Growth care card */
+  --color-ochre: #c9a45c;
+  --color-ochre-deep: #a07a2e; /* "quoted separately" marks */
   --font-sans: var(--font-manrope), system-ui, sans-serif;
 }
 

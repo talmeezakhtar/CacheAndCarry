@@ -6,7 +6,7 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 
 ## On the site now (from the PDF)
 
-- Founding offer bar, dismissible (4.1).
+- Founding offer bar, dismissible (4.1). `founding.left` in `lib/site.ts` is a hand count: 5 of 5 at launch; lower it as places are taken (the bar then says "Only N of 5 places left").
 - Hero copy with rotating words; reduced-motion users see "shop" only (4.3).
 - Trust strip: 5 working days, starting price, Arabic too, you own it (4.4).
 - How it works with Day 0 / Day 1 to 3 / By day 5. Step 2 says two rounds, matching the pricing rules (4.6).
@@ -18,7 +18,7 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 - Metadata, Open Graph, X card, theme colour, canonical, sitemap, robots, ProfessionalService and FAQPage structured data, no price markup (2).
 - Footer copyright: "Working name, not yet registered" (2).
 - WhatsApp number +971 50 348 2765 on every button (`site.whatsapp`).
-- Confirmed terms on the site: Starter paid in full upfront, bigger builds 50/50, care plans 3-month minimum then monthly, prices excl. VAT with VAT as a separate quote line, Arabic AED 149 per page with client-approved translation.
+- Confirmed terms on the site: Starter paid in full upfront, bigger builds 50/50, care plans 3-month minimum then monthly, no VAT shown (not VAT-registered), Arabic AED 149 per page with client-approved translation.
 - Privacy policy (`/privacy`) and terms of service (`/terms`), written from how the site and business actually work.
 
 ## Still to build
@@ -31,7 +31,7 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 | Presence pack (AED 175) on the site | Confirmed to keep (decisions log #9): Google Business Profile, WhatsApp catalogue up to 10 items, photos, local search words; credited against a Starter within 60 days. Not on the site yet | 6.4 |
 | Real hero photo (with written permission) and og:image | Placeholder only; no share image until then | 2, 4.3 |
 | Favicon (C&C monogram) | Not designed | 2 |
-| Domain | `cacheandcarry.ae` is a placeholder, availability not checked | 1, 12 |
+| Domain | `cacheandcarry.ae` is a placeholder, availability not checked. Set `NEXT_PUBLIC_SITE_URL` to the real domain in the host's environment settings | 1, 12 |
 
 ## Decided (decisions log, 13 Nov 2026)
 
@@ -45,14 +45,14 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 8. **Arabic**: AED 149 per page.
 9. **Presence pack**: keep (AED 175). Not on the site yet, see above.
 10. **Pay-monthly Starter**: not offered.
-11. **VAT**: prices exclude VAT; VAT is a separate line on quotes once registered.
+11. **VAT**: not registered, so no VAT is mentioned anywhere on the site or in quotes (updated 13 Nov 2026). Add it back only after registering.
 12. **Validation gate**: 3 sample sites and 15 to 20 businesses per niche before any licence application.
 
 ## Still open (from the decisions log)
 
 1. **Domain**: check `cacheandcarry.ae` (and `.com`) before printing or registering.
 2. **Trade name and trademark**: search the UAE registers for "Cache & Carry". The footer keeps "Working name, not yet registered" until then.
-3. **Accountant**: confirm the VAT wording, the 100% Starter rule and the 50/50 terms.
+3. **Accountant**: confirm the 100% Starter rule and the 50/50 terms (second half before go-live), and the VAT wording once registered.
 4. **Measure the first three Starter builds**: fix the template if any run past about 4.5 hours.
 5. **Care+ review**: track take-up for 60 days; trim included edits rather than raise the price.
 6. **Same-day reply**: the contact band says "We'll reply on WhatsApp" until someone can promise same day.

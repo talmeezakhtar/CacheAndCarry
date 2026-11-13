@@ -39,7 +39,7 @@ Four things, together, set it apart from other web studios:
 - Build packages: Starter, Business, Pro, Store. Starter and Business are priced in the builder; Pro and Store are quoted.
 - Care plans billed monthly, or yearly with two months free.
 - 16 priced add-ons (pages, Arabic per page, copywriting, gallery, booking, domains, email, logo, rush delivery and more).
-- Prices are confirmed (decisions log, 13 Nov 2026) and shown without brackets. Prices exclude VAT; VAT is a separate line on quotes once registered. Starter is paid in full upfront; bigger builds are 50% to start and 50% before go-live. Care plans have a 3-month minimum, then run monthly. Nothing is charged on the site.
+- Prices are confirmed (decisions log, 13 Nov 2026) and shown without brackets. The business is not VAT-registered, so the site and quotes mention no VAT; add VAT wording only once registered (and check with the accountant how prices must then be shown). Starter is paid in full upfront; bigger builds are 50% to start and 50% before go-live. Care plans have a 3-month minimum, then run monthly. Nothing is charged on the site.
 - Not offered: custom apps or software, paid ad campaigns, AI-visibility add-ons, guaranteed rankings, leads or sales.
 - Still open: domain, trade name and trademark, accountant sign-off on VAT and payment wording, same-day reply promise. See `LAUNCH-CHECKLIST.md`.
 - Still to build: analytics, the `/ar/` Arabic site (after English is finished), the presence pack on the site, own hero clip and share image, favicon, domain. Privacy and terms are written and need a UAE legal review.

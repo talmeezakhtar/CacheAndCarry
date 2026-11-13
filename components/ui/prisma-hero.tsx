@@ -1,8 +1,8 @@
 "use client";
 
 import { MotionConfig, motion, useInView, useReducedMotion } from "motion/react";
-import { ArrowRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Pause, Play } from "lucide-react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const rise = (delay: number) => ({
@@ -34,27 +34,34 @@ export const WordsPullUp = ({ text, className = "" }: { text: string; className?
 
 const nouns = ["shop", "salon", "café", "boutique", "clinic"];
 
-/* The one looping motion in the hero. Stops for reduced-motion users. */
-function RotatingNoun() {
+/* The one looping word in the hero. Stops for reduced-motion users and when the visitor pauses the hero. */
+function RotatingNoun({ paused }: { paused: boolean }) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || paused) return;
     const t = setInterval(() => setI((n) => (n + 1) % nouns.length), 2600);
     return () => clearInterval(t);
-  }, [reduce]);
+  }, [reduce, paused]);
   return (
     <motion.span
       key={nouns[i]}
       initial={{ y: 8, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.35 }}
-      className="inline-block italic text-[#c3d0a6]" /* pale sage: olive is unreadable over the dark video */
+      className="inline-block italic text-sage-pale" /* pale sage: olive is unreadable over the dark video */
     >
       {nouns[i]}
     </motion.span>
   );
 }
+
+const MOTION_OK = "(prefers-reduced-motion: no-preference)";
+const onMotionChange = (cb: () => void) => {
+  const mq = matchMedia(MOTION_OK);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
 
 /**
  * Prisma-style hero: full-bleed video (poster image for reduced motion), noise and gradient
@@ -62,8 +69,17 @@ function RotatingNoun() {
  * The nav tab lives in the page so it can stay fixed while scrolling.
  */
 export function PrismaHero({ video, poster, whatsappHref }: { video?: string; poster: string; whatsappHref: string }) {
-  const reduce = useReducedMotion();
+  // The video is added only after mount, and never for reduced motion: server and browser render the same poster,
+  // and reduced-motion visitors never download the clip.
+  const motionOk = useSyncExternalStore(onMotionChange, () => matchMedia(MOTION_OK).matches, () => false);
   const [playing, setPlaying] = useState(false);
+  const [paused, setPaused] = useState(false); // WCAG 2.2.2: anything moving for more than 5 seconds can be paused
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const togglePause = () => {
+    const v = videoRef.current;
+    if (v) void (paused ? v.play().catch(() => {}) : v.pause());
+    setPaused(!paused);
+  };
   const media = "absolute inset-0 h-full w-full object-cover";
   return (
     <MotionConfig reducedMotion="user">
@@ -74,8 +90,9 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
               so there is no black flash or pop while it loads. Full-quality file, never re-encoded here. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={poster} alt="" fetchPriority="high" className={media} />
-          {video && !reduce && (
+          {video && motionOk && (
             <video
+              ref={videoRef}
               autoPlay
               loop
               muted
@@ -92,6 +109,18 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
           <div className="noise-overlay pointer-events-none absolute inset-0 opacity-70 mix-blend-overlay" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
 
+          {motionOk && (
+            <button
+              type="button"
+              onClick={togglePause}
+              aria-pressed={paused}
+              aria-label={paused ? "Play the hero animation" : "Pause the hero animation"}
+              className="absolute right-3 top-16 z-30 grid size-11 place-items-center rounded-full bg-black/35 text-surface backdrop-blur-sm transition-colors hover:bg-black/55 md:right-5 md:top-5"
+            >
+              {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
+            </button>
+          )}
+
           <div className="absolute inset-x-0 bottom-0 grid grid-cols-12 items-end gap-4 px-4 pb-6 sm:px-6 md:px-10 lg:pb-10">
             <p
               aria-hidden
@@ -103,10 +132,11 @@ export function PrismaHero({ video, poster, whatsappHref }: { video?: string; po
 
             <div className="col-span-12 flex flex-col items-start gap-5 lg:col-span-4">
               <motion.h1 {...rise(0.4)} className="font-heading text-3xl leading-[1.1] md:text-4xl">
-                Your <RotatingNoun /> online in 5 working days.
+                Your <RotatingNoun paused={paused} /> online in 5 working days.
               </motion.h1>
               <motion.p {...rise(0.55)} className="max-w-[42ch] leading-snug text-surface/85 md:text-lg">
-                Websites for small businesses in Sharjah and Dubai, in English and Arabic.
+                Websites for small businesses in Sharjah and Dubai, in English and Arabic. A one-page Starter site goes live 5 working days after we
+                have your content.
               </motion.p>
               <motion.a
                 {...rise(0.7)}

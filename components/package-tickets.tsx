@@ -45,11 +45,11 @@ function Ticket({ pkg, index }: { pkg: (typeof packages)[number]; index: number 
           presenter="Cache & Carry"
           event="Build package"
           venue={pkg.note}
-          dates={pkg.price > QUOTE_THRESHOLD ? "quoted in writing" : pkg.label === "Starter" ? "paid upfront" : "50% now, 50% at launch"}
+          dates={pkg.price > QUOTE_THRESHOLD ? "quoted in writing" : paymentTerms(pkg.label).toLowerCase()}
           stubText={price}
           watermark={String(index + 1).padStart(2, "0")}
           layout={{ ...TICKET_LAYOUT, stubSize: 46 / 741, inkColor: c.ink, watermarkColor: c.watermark, watermarkOpacity: 0.35 }}
-          texture={{ ...TICKET_TEXTURE, colorBack: c.back, colorFront: c.front, colorHighlight: c.front, speed: 0.25 }}
+          texture={{ ...TICKET_TEXTURE, colorBack: c.back, colorFront: c.front, colorHighlight: c.front, speed: 0 }} /* a still paper texture: drawn once, no animation loop running on phones */
         />
       )}
     </div>
