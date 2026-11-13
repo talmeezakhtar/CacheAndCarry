@@ -42,7 +42,8 @@ Four things, together, set it apart from other web studios:
 - Prices are confirmed (decisions log, 13 Nov 2026) and shown without brackets. The business is not VAT-registered, so the site and quotes mention no VAT; add VAT wording only once registered (and check with the accountant how prices must then be shown). Starter is paid in full upfront; bigger builds are 50% to start and 50% before go-live. Care plans have a 3-month minimum, then run monthly. Nothing is charged on the site.
 - Not offered: custom apps or software, paid ad campaigns, AI-visibility add-ons, guaranteed rankings, leads or sales.
 - Still open: domain, trade name and trademark, accountant sign-off on VAT and payment wording, same-day reply promise. See `LAUNCH-CHECKLIST.md`.
-- Still to build: analytics, the `/ar/` Arabic site (after English is finished), the presence pack on the site, own hero clip and share image, favicon, domain. Privacy and terms are written and need a UAE legal review.
+- The Arabic site is built at `/ar` (homepage and price builder, right to left; copy in `lib/i18n-ar.ts`); it still needs a native Arabic speaker's read before launch, and the privacy and terms pages are English only.
+- Still to build: analytics, the presence pack on the site, own hero clip and share image, favicon, domain. Privacy and terms are written and need a UAE legal review.
 
 ## Brand Commitments
 
@@ -67,4 +68,4 @@ Four things, together, set it apart from other web studios:
 ## Accessibility & Inclusion
 
 - WCAG AA contrast and keyboard access across the site; motion respects reduced-motion settings.
-- Bilingual audience: English now, Arabic with right-to-left layout planned at `/ar/`.
+- Bilingual audience: English at `/`, Arabic with right-to-left layout at `/ar`.

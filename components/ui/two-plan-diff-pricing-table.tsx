@@ -23,6 +23,8 @@ export type DiffPlan = {
   interval?: string;
   /** Show the price as a starting price ("from AED 2,499"). */
   from?: boolean;
+  /** The price exactly as printed, when the currency goes after the number (e.g. Arabic "299 د.إ"). */
+  priceLabel?: string;
   badge?: string;
   actionLabel?: string;
 };
@@ -71,6 +73,10 @@ export type TwoPlanDiffPricingTableProps = {
     same?: string;
     showSame?: string;
     hideSame?: string;
+    upgrade?: string;
+    downgrade?: string;
+    included?: string;
+    notIncluded?: string;
     feature?: string;
     keep?: (plan: DiffPlan) => string;
     summary?: (from: DiffPlan, to: DiffPlan, delta: number, gains: number, losses: number) => string;
@@ -112,10 +118,11 @@ export function verdictFor(feature: DiffFeature, fromId: string, toId: string): 
 }
 
 export function formatPrice(plan: DiffPlan) {
+  if (plan.priceLabel) return plan.priceLabel;
   return `${plan.from ? "from " : ""}${plan.currency ?? "$"}${plan.price.toLocaleString("en-US")}${plan.interval ?? "/mo"}`;
 }
 
-function ValueCell({ value, verdict, side }: { value: DiffValue | undefined; verdict: DiffVerdict; side: "from" | "to" }) {
+function ValueCell({ value, verdict, side, labels }: { value: DiffValue | undefined; verdict: DiffVerdict; side: "from" | "to"; labels: { included?: string; notIncluded?: string } }) {
   const emphasis =
     side === "to" && verdict === "gain"
       ? "font-bold text-foreground"
@@ -131,7 +138,7 @@ function ValueCell({ value, verdict, side }: { value: DiffValue | undefined; ver
         >
           {value ? <Check className="size-3" strokeWidth={3} /> : <Minus className="size-3" strokeWidth={3} />}
         </span>
-        <span className="sr-only">{value ? "Included" : "Not included"}</span>
+        <span className="sr-only">{value ? (labels.included ?? "Included") : (labels.notIncluded ?? "Not included")}</span>
       </span>
     );
   }
@@ -277,24 +284,24 @@ export function TwoPlanDiffPricingTable({
   const renderRows = (verdict: DiffVerdict, list: DiffFeature[]) =>
     list.map((feature) => (
       <tr key={feature.id} ref={registerRow(feature.id)} data-feature={feature.id} data-verdict={verdict} className="border-t border-border">
-        <th scope="row" className="py-3 pl-4 pr-2 text-left text-sm font-bold text-foreground sm:pl-5">
+        <th scope="row" className="py-3 ps-4 pe-2 text-start text-sm font-bold text-foreground sm:ps-5">
           {feature.label}
         </th>
         <td data-side="from" className="px-3 py-3 text-center text-sm">
-          <ValueCell value={feature.values[from.id]} verdict={verdict} side="from" />
+          <ValueCell value={feature.values[from.id]} verdict={verdict} side="from" labels={labels} />
         </td>
         <td
           data-side="to"
-          className={`relative py-3 pl-3 pr-10 text-center text-sm ${verdict === "gain" ? "bg-chart-2/10" : verdict === "loss" ? "bg-chart-5/10" : ""}`}
+          className={`relative py-3 ps-3 pe-10 text-center text-sm ${verdict === "gain" ? "bg-chart-2/10" : verdict === "loss" ? "bg-chart-5/10" : ""}`}
         >
-          <ValueCell value={feature.values[to.id]} verdict={verdict} side="to" />
+          <ValueCell value={feature.values[to.id]} verdict={verdict} side="to" labels={labels} />
           {verdict === "gain" && (
-            <span className="absolute right-3 top-1/2 inline-flex size-5 -translate-y-1/2 items-center justify-center rounded-full bg-chart-2 text-background" aria-label="Upgrade">
+            <span className="absolute end-3 top-1/2 inline-flex size-5 -translate-y-1/2 items-center justify-center rounded-full bg-chart-2 text-background" aria-label={labels.upgrade ?? "Upgrade"}>
               <Plus className="size-3" strokeWidth={3} />
             </span>
           )}
           {verdict === "loss" && (
-            <span className="absolute right-3 top-1/2 inline-flex size-5 -translate-y-1/2 items-center justify-center rounded-full bg-chart-5 text-background" aria-label="Downgrade">
+            <span className="absolute end-3 top-1/2 inline-flex size-5 -translate-y-1/2 items-center justify-center rounded-full bg-chart-5 text-background" aria-label={labels.downgrade ?? "Downgrade"}>
               <Minus className="size-3" strokeWidth={3} />
             </span>
           )}
@@ -308,7 +315,7 @@ export function TwoPlanDiffPricingTable({
         <th
           scope="rowgroup"
           colSpan={3}
-          className={`px-4 py-2 text-left text-xs font-bold uppercase tracking-[0.12em] sm:px-5 ${verdict === "gain" ? "text-chart-2" : verdict === "loss" ? "text-chart-5" : "text-muted-foreground"}`}
+          className={`px-4 py-2 text-start text-xs font-bold uppercase tracking-[0.12em] sm:px-5 ${verdict === "gain" ? "text-chart-2" : verdict === "loss" ? "text-chart-5" : "text-muted-foreground"}`}
         >
           {label} · {count}
         </th>
@@ -359,42 +366,44 @@ export function TwoPlanDiffPricingTable({
             data-swap
             onClick={swap}
             aria-label={labels.swap ?? "Swap plans"}
-            className="ml-auto inline-flex size-11 items-center justify-center rounded-full border border-border text-muted-foreground outline-none transition-colors motion-reduce:transition-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="ms-auto inline-flex size-11 items-center justify-center rounded-full border border-border text-muted-foreground outline-none transition-colors motion-reduce:transition-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             <ArrowLeftRight className="size-4" aria-hidden="true" />
           </button>
         </div>
         <p ref={summaryRef} id={headingId} data-summary role="status" aria-live="polite" className="rounded-xl bg-muted px-4 py-3 text-sm font-bold text-foreground">
-          <span className="font-normal text-muted-foreground">{from.name} → </span>
+          <span className="font-normal text-muted-foreground">
+            {from.name} <span className="inline-block rtl:-scale-x-100" aria-hidden>→</span>{" "}
+          </span>
           {summaryText}
         </p>
       </div>
-      <table className="w-full border-collapse text-left">
+      <table className="w-full border-collapse text-start">
         <thead>
           <tr className="border-t border-border">
-            <th scope="col" className="py-2.5 pl-4 pr-2 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground sm:pl-5">
+            <th scope="col" className="py-2.5 ps-4 pe-2 text-start text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground sm:ps-5">
               {labels.feature ?? "Feature"}
             </th>
             <th scope="col" data-head="from" className="px-3 py-2.5 text-center text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-              <span className="mr-1.5 inline-flex size-4 items-center justify-center rounded-full bg-chart-3 text-[10px] font-bold text-background">A</span>
+              <span className="me-1.5 inline-flex size-4 items-center justify-center rounded-full bg-chart-3 text-[10px] font-bold text-background">A</span>
               {from.name}
             </th>
-            <th scope="col" data-head="to" className="py-2.5 pl-3 pr-10 text-center text-xs font-bold uppercase tracking-[0.12em] text-foreground">
-              <span className="mr-1.5 inline-flex size-4 items-center justify-center rounded-full bg-chart-1 text-[10px] font-bold text-background">B</span>
+            <th scope="col" data-head="to" className="py-2.5 ps-3 pe-10 text-center text-xs font-bold uppercase tracking-[0.12em] text-foreground">
+              <span className="me-1.5 inline-flex size-4 items-center justify-center rounded-full bg-chart-1 text-[10px] font-bold text-background">B</span>
               {to.name}
             </th>
           </tr>
         </thead>
         <tbody>
-          {sectionRow("gain", labels.gain ? `You gain · ${labels.gain}` : "You gain", sections.gain.length)}
+          {sectionRow("gain", labels.gain ?? "You gain", sections.gain.length)}
           {renderRows("gain", sections.gain)}
-          {sectionRow("loss", "You lose", sections.loss.length)}
+          {sectionRow("loss", labels.loss ?? "You lose", sections.loss.length)}
           {renderRows("loss", sections.loss)}
           {sectionRow("changed", labels.changed ?? "Different", sections.changed.length)}
           {renderRows("changed", sections.changed)}
           {sections.same.length > 0 && (
             <tr data-section="same" className="bg-muted/60">
-              <th scope="rowgroup" colSpan={3} className="px-2 py-1 text-left sm:px-3">
+              <th scope="rowgroup" colSpan={3} className="px-2 py-1 text-start sm:px-3">
                 <button
                   type="button"
                   data-toggle-same

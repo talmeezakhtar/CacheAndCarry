@@ -117,6 +117,7 @@ export default function Pricing6({
   secondLabel,
   title,
   subtitle,
+  groupLabel = "Billing",
 }: {
   firstPlans: Plan6[];
   secondPlans: Plan6[];
@@ -124,6 +125,8 @@ export default function Pricing6({
   secondLabel: string;
   title: string;
   subtitle?: string;
+  /** Accessible name of the Monthly / Yearly switch. */
+  groupLabel?: string;
 }) {
   const [second, setSecond] = useState(false);
   const plans = second ? secondPlans : firstPlans;
@@ -135,7 +138,7 @@ export default function Pricing6({
           <h3 className="font-heading text-3xl">{title}</h3>
           {subtitle && <p className="text-ink/80">{subtitle}</p>}
         </div>
-        <div role="group" aria-label="Billing" className="flex items-center gap-0.5 self-start rounded-full border border-line bg-surface p-1 sm:self-auto">
+        <div role="group" aria-label={groupLabel} className="flex items-center gap-0.5 self-start rounded-full border border-line bg-surface p-1 sm:self-auto">
           {[firstLabel, secondLabel].map((label, i) => {
             const on = (i === 1) === second;
             return (

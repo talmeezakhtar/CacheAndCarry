@@ -14,6 +14,7 @@ import { useRef } from "react";
 import { MotionConfig, motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/locale-provider";
 
 export type Project = {
   name: string;
@@ -28,6 +29,7 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
 export function ProjectDeck({ projects, ground = "#f4f5f1", className }: { projects: Project[]; ground?: string; className?: string }) {
   const deck = useRef(null as HTMLElement | null);
+  const { t } = useI18n();
   const reduce = useReducedMotion() ?? false;
   const count = projects.length;
   const { scrollYProgress } = useScroll({ target: deck, offset: ["start start", "end end"] });
@@ -42,7 +44,7 @@ export function ProjectDeck({ projects, ground = "#f4f5f1", className }: { proje
         ref={deck}
         className={cn("relative h-[var(--deck-phone)] w-full sm:h-[var(--deck)]", className)}
         style={{ "--deck": `${Math.max(1, count) * 100}svh`, "--deck-phone": `${100 + Math.max(0, count - 1) * 60}svh` } as React.CSSProperties}
-        aria-label="Our work"
+        aria-label={t("Our work")}
       >
         <div className="sticky top-0 grid h-[100svh] place-items-center overflow-hidden px-3 pt-6 [perspective:1800px] sm:px-4 lg:px-6">
           {projects.map((p, i) => (
@@ -67,6 +69,8 @@ function arrived(j: number, v: number, count: number) {
 function Card({ p, i, count, progress, still, ground }: {
   p: Project; i: number; count: number; progress: MotionValue<number>; still: boolean; ground: string;
 }) {
+  const { t } = useI18n();
+  const summary = t(p.summary);
   // cards now lying on top of this one, counted smoothly
   const above = (v: number) => {
     let n = 0;
@@ -83,7 +87,7 @@ function Card({ p, i, count, progress, still, ground }: {
 
   return (
     <motion.article
-      aria-label={`${p.name}: ${p.summary}`}
+      aria-label={`${p.name}: ${summary}`}
       className="col-start-1 row-start-1 w-[min(100%,calc(86svh*16/9))] origin-[50%_25%] will-change-[transform,filter] max-sm:w-full"
       style={{ zIndex: i + 1, ...(still ? { y: stillY } : { y, rotateX, scale, filter }) }}
     >
@@ -92,7 +96,7 @@ function Card({ p, i, count, progress, still, ground }: {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={p.image}
-          alt={`${p.name} website, home page: ${p.summary}`}
+          alt={t("{name} website, home page: {summary}", { name: p.name, summary })}
           loading={i < 2 ? "eager" : "lazy"}
           decoding="async"
           className="block aspect-[16/9] w-full bg-surface object-cover object-top max-sm:aspect-[4/5]"
@@ -106,6 +110,7 @@ function Card({ p, i, count, progress, still, ground }: {
 
 /** The visit button, set into a corner cut out of the card. */
 function Visit({ p, ground }: { p: Project; ground: string }) {
+  const { t } = useI18n();
   const R = 12;
   const corner = (
     <svg aria-hidden width={R} height={R} viewBox={`0 0 ${R} ${R}`} className="block">
@@ -120,7 +125,7 @@ function Visit({ p, ground }: { p: Project; ground: string }) {
         href={p.url}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`Open ${p.name} (opens in a new tab)`}
+        aria-label={t("Open {name} (opens in a new tab)", { name: p.name })}
         className="group flex items-center gap-4 rounded-tl-xl py-3 pr-1 pl-5 text-ink outline-none sm:gap-5 sm:py-4 sm:pl-7"
         style={{ background: ground }}
       >
@@ -128,10 +133,10 @@ function Visit({ p, ground }: { p: Project; ground: string }) {
           <span className="flex items-center gap-2 text-base font-bold sm:text-lg">
             {p.name}
           </span>
-          <span className="text-sm text-ink/80 underline-offset-4 group-hover:underline group-focus-visible:underline sm:text-base">{p.summary}</span>
+          <span className="text-sm text-ink/80 underline-offset-4 group-hover:underline group-focus-visible:underline sm:text-base">{t(p.summary)}</span>
         </span>
         <span className="grid size-11 place-items-center rounded-full bg-ink text-surface transition-transform duration-200 ease-out group-hover:rotate-45 group-active:scale-90 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-accent sm:size-[52px]">
-          <ArrowUpRight className="size-5 sm:size-6" strokeWidth={2.2} />
+          <ArrowUpRight className="size-5 sm:size-6 rtl:-scale-x-100" strokeWidth={2.2} />
         </span>
       </a>
     </div>

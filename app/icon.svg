@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- C&C monogram: ink tile, linen letters, moss ampersand (DESIGN.md palette). Stand-in until a designed mark exists. -->
+  <rect width="64" height="64" rx="14" fill="#17211b"/>
+  <text x="32" y="43" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700" letter-spacing="-1" fill="#fcfcfa">C<tspan fill="#b9c79e">&amp;</tspan>C</text>
+</svg>

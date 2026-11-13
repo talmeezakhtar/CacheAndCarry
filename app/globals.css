@@ -83,7 +83,7 @@ body {
   letter-spacing: -0.01em;
   font-feature-settings: "lnum" 1;
   /* Cormorant has a small x-height; scale it up ~10% everywhere so headings and prices read at their intended size */
-  font-size-adjust: ex-height 0.44;
+  font-size-adjust: var(--heading-adjust, ex-height 0.44);
 }
 
 h1, h2, h3, h4 {
@@ -91,4 +91,21 @@ h1, h2, h3, h4 {
 }
 p, li {
   text-wrap: pretty;
+}
+
+/* ---- Arabic (/ar, <html lang="ar" dir="rtl">) ----
+   Amiri and IBM Plex Sans Arabic load under the same font variables, so only what Arabic needs differently is here. */
+html[lang="ar"] {
+  --heading-adjust: none; /* the ex-height boost is for Cormorant's small Latin x-height */
+}
+/* Arabic letters join: letter spacing breaks the joins, so it is off everywhere except the footer's drawn Latin wordmark. */
+html[lang="ar"] body :not(.dcf-stage, .dcf-stage *) {
+  letter-spacing: 0 !important;
+}
+/* Arabic script needs more room above and below than the Latin line heights the headings were set with. */
+html[lang="ar"] .font-heading {
+  line-height: 1.35 !important;
+}
+html[lang="ar"] body {
+  line-height: 1.7;
 }

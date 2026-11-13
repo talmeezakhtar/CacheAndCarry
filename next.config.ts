@@ -23,14 +23,26 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Frame-Options", value: "DENY" },
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), browsing-topics=()" },
+  // HTTPS only, for two years, on this domain and its subdomains. Add "; preload" only once the domain is final:
+  // the preload list is hard to leave.
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  // pages opened from here (WhatsApp, the demo sites) cannot reach back into this window
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false, // don't advertise the framework
+  // browsers still ask for /favicon.ico; answer with the C&C icon instead of a 404
+  async rewrites() {
+    return [{ source: "/favicon.ico", destination: "/apple-icon" }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
   cacheComponents: true,
+  // two root layouts (English and /ar), so unmatched URLs get app/global-not-found.tsx
+  experimental: { globalNotFound: true },
   partialPrefetching: true,
   turbopack: {
     rules: {

@@ -1,3 +1,5 @@
+import { i18n, type Locale } from "@/lib/i18n";
+
 /*
  * FAQ as a card-index drawer (TACTILE UI, cut 4), adapted for Cache & Carry:
  * - plain server-rendered JSX instead of an innerHTML mount, so the answers are in the HTML (SEO, FAQPage)
@@ -9,10 +11,10 @@
 type Card = { tab: string; q: string; a: string };
 
 const STATIONS = [0.04, 0.37, 0.7]; // tabs staggered along the top edge, as a filing clerk does
-const no = (i: number) => `Q.${String(i + 1).padStart(2, "0")}`;
 
 export function FaqDrawer({
   id,
+  locale = "en",
   cards,
   title,
   lead,
@@ -22,6 +24,7 @@ export function FaqDrawer({
   askHref,
 }: {
   id?: string;
+  locale?: Locale;
   cards: readonly Card[];
   title: string;
   lead: string;
@@ -31,6 +34,8 @@ export function FaqDrawer({
   askHref: string;
 }) {
   const n = cards.length;
+  const { t } = i18n(locale);
+  const no = (i: number) => `${t("Q.")}${String(i + 1).padStart(2, "0")}`;
   const external = /^https?:/.test(askHref);
   return (
     <section id={id} className="fq" aria-labelledby="fq-title">
@@ -66,7 +71,7 @@ export function FaqDrawer({
                   </summary>
                   <div className="fq-face">
                     <p className="fq-a">{c.a}</p>
-                    <p className="fq-filed" aria-hidden>Filed under {c.tab} · {no(i)}</p>
+                    <p className="fq-filed" aria-hidden>{t("Filed under {tab} · {no}", { tab: c.tab, no: no(i) })}</p>
                   </div>
                 </details>
               ))}
@@ -176,7 +181,7 @@ const CSS = `
 .fq-card[open] .fq-mark::after { transform: rotate(0deg); }
 
 .fq-tab {
-  position: absolute; bottom: 100%; left: calc(var(--tab-at, 0) * 100%); height: 19px; padding: 3px 11px 0;
+  position: absolute; bottom: 100%; inset-inline-start: calc(var(--tab-at, 0) * 100%); height: 19px; padding: 3px 11px 0;
   border-radius: 5px 5px 0 0;
   background: linear-gradient(rgb(40 46 30 / var(--shade)), rgb(40 46 30 / var(--shade))), var(--fibre), var(--paper);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 -4px 7px -4px var(--drop);
@@ -193,7 +198,7 @@ const CSS = `
   background: repeating-linear-gradient(to bottom, transparent 0 25px, var(--rule) 25px 26px) 0 20px / 100% calc(100% - 42px) no-repeat;
 }
 .fq-a { max-width: 60ch; }
-.fq-filed { margin-top: 26px; font-size: 12px; letter-spacing: .06em; color: var(--type-2); text-align: right; }
+.fq-filed { margin-top: 26px; font-size: 12px; letter-spacing: .06em; color: var(--type-2); text-align: end; }
 
 .fq-front {
   display: grid; justify-items: center; gap: 10px; margin: 0 -12px; padding: 16px 0 18px;
@@ -232,7 +237,7 @@ const CSS = `
   .fq-edge { grid-template-columns: minmax(0, 1fr) auto; padding: 14px 14px 20px; font-size: 15px; line-height: 22px; }
   .fq-no { display: none; }
   .fq-tab { font-size: 10.5px; padding-inline: 8px; }
-  .fq-face { margin-inline: 14px; padding-left: 0; font-size: 15px; }
+  .fq-face { margin-inline: 14px; padding-inline-start: 0; font-size: 15px; }
   .fq-front { margin-inline: -8px; }
   .fq-ask { align-items: stretch; }
   .fq-key { justify-content: center; }

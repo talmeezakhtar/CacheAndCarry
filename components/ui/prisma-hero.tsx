@@ -2,6 +2,7 @@
 
 import { MotionConfig, motion, useInView } from "motion/react";
 import { ArrowRight, Pause, Play } from "lucide-react";
+import { useI18n } from "@/components/locale-provider";
 import { useRef, useState, useSyncExternalStore } from "react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -49,6 +50,7 @@ export function PrismaHero({ video, videoSmall, poster, whatsappHref }: { video?
   // and reduced-motion visitors never download the clip.
   const motionOk = useSyncExternalStore(onMotionChange, () => matchMedia(MOTION_OK).matches, () => false);
   const [playing, setPlaying] = useState(false);
+  const { t } = useI18n();
   const [paused, setPaused] = useState(false); // WCAG 2.2.2: anything moving for more than 5 seconds can be paused
   const videoRef = useRef<HTMLVideoElement>(null);
   const togglePause = () => {
@@ -94,8 +96,8 @@ export function PrismaHero({ video, videoSmall, poster, whatsappHref }: { video?
               type="button"
               onClick={togglePause}
               aria-pressed={paused}
-              aria-label={paused ? "Play the hero animation" : "Pause the hero animation"}
-              className="absolute right-3 top-16 z-30 grid size-11 place-items-center rounded-full bg-black/35 text-surface backdrop-blur-sm transition-colors hover:bg-black/55 md:right-5 md:top-5"
+              aria-label={t(paused ? "Play the hero animation" : "Pause the hero animation")}
+              className="absolute end-3 top-16 z-30 grid size-11 place-items-center rounded-full bg-black/35 text-surface backdrop-blur-sm transition-colors hover:bg-black/55 md:end-5 md:top-5"
             >
               {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
             </button>
@@ -108,24 +110,24 @@ export function PrismaHero({ video, videoSmall, poster, whatsappHref }: { video?
                 Cache &amp; Carry
               </motion.p>
               <h1 className="mt-3 font-heading text-[12.5vw] leading-[0.95] tracking-[-0.03em] sm:text-[9vw] lg:text-[min(6.6vw,6.75rem)]">
-                <WordsPullUp text={"Your business online in 5\u00a0working days."} />
+                <WordsPullUp text={t("Your business online in 5\u00a0working days.")} />
               </h1>
             </div>
 
             <div className="col-span-12 flex flex-col items-start gap-5 lg:col-span-4">
               <motion.p {...rise(0.55)} className="max-w-[40ch] leading-snug text-surface/85 md:text-lg">
-                English and Arabic websites for small businesses in Sharjah and Dubai.
+                {t("English and Arabic websites for small businesses in Sharjah and Dubai.")}
               </motion.p>
               <motion.a
                 {...rise(0.7)}
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-surface py-1 pl-5 pr-1 font-bold text-ink transition-all hover:gap-3 hover:bg-page active:scale-[0.98]"
+                className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-surface py-1 ps-5 pe-1 font-bold text-ink transition-all hover:gap-3 hover:bg-page active:scale-[0.98]"
               >
-                Chat on WhatsApp
+                {t("Chat on WhatsApp")}
                 <span className="flex size-10 items-center justify-center rounded-full bg-ink transition-transform group-hover:scale-110">
-                  <ArrowRight className="size-4 text-surface" />
+                  <ArrowRight className="size-4 text-surface rtl:-scale-x-100" />
                 </span>
               </motion.a>
             </div>

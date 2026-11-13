@@ -27,7 +27,7 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 | --- | --- | --- |
 | Legal review of `/privacy` and `/terms` | Written in plain professional English; a UAE lawyer should review against the PDPL (Federal Decree-Law No. 45 of 2021) before launch. Confirm the policy commitments: 12-month deletion of enquiries, 90-day deletion after work ends, 30-day response to data requests, two-step sign-in on our accounts, 14-day late-payment pause, build refund rule | 2, 10 |
 | Analytics with WhatsApp click events | Not chosen yet; event names are listed in section 4 | 2, 4 |
-| Arabic version at `/ar/` with `dir="rtl"`, hreflang, sitemap entry | After the English site is finished; client approves each translation (decisions log #8) | 1, 2, 3 |
+| Arabic version at `/ar` with `dir="rtl"`, hreflang, sitemap entry | **Built.** Homepage and `/ar/estimate` are live in Arabic; copy in `lib/i18n-ar.ts`, reviewed once by an editing pass. Still to do: a native Arabic speaker reads the live pages and the client approves the copy (decisions log #8); privacy and terms in Arabic after the UAE legal review | 1, 2, 3 |
 | Presence pack (AED 175) on the site | Confirmed to keep (decisions log #9): Google Business Profile, WhatsApp catalogue up to 10 items, photos, local search words; credited against a Starter within 60 days. Not on the site yet | 6.4 |
 | Real hero photo (with written permission) and og:image | Placeholder only; no share image until then | 2, 4.3 |
 | Favicon (C&C monogram) | Not designed | 2 |
