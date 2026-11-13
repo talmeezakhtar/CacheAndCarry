@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-12T20:04:34.094Z",
+  "title": "Design System: Cache & Carry",
+  "extensions": {
+    "colorMeta": {
+      "page": {
+        "role": "neutral",
+        "displayName": "Pearl",
+        "tonalRamp": [
+          "#2a2c27",
+          "#45473f",
+          "#63665c",
+          "#83877b",
+          "#a6a99d",
+          "#c8cbc0",
+          "#e6e8e1",
+          "#f4f5f1"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Linen White",
+        "tonalRamp": [
+          "#2d2e2a",
+          "#4a4c45",
+          "#6a6c64",
+          "#8c8e85",
+          "#b0b2a9",
+          "#d4d5ce",
+          "#eeefea",
+          "#fcfcfa"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Moss Black",
+        "tonalRamp": [
+          "#17211b",
+          "#2b372f",
+          "#425046",
+          "#5b6a5f",
+          "#78877b",
+          "#98a69a",
+          "#bcc7be",
+          "#e2e8e3"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Moss",
+        "tonalRamp": [
+          "#1c2c17",
+          "#2a4024",
+          "#355530",
+          "#3f6b3a",
+          "#5c8455",
+          "#7d9e74",
+          "#b2c6a8",
+          "#e1eadb"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Ledger Rule"
+      },
+      "sage-wash": {
+        "role": "neutral",
+        "displayName": "Sage Wash"
+      },
+      "sage-tint": {
+        "role": "neutral",
+        "displayName": "Sage Tint"
+      },
+      "sage-light": {
+        "role": "neutral",
+        "displayName": "Light Sage"
+      },
+      "ochre": {
+        "role": "secondary",
+        "displayName": "Ochre",
+        "tonalRamp": [
+          "#3a2a10",
+          "#5a4218",
+          "#7d5c22",
+          "#a07a2e",
+          "#c9a45c",
+          "#d8ba7c",
+          "#e3c88f",
+          "#f6ecd4"
+        ]
+      },
+      "ochre-deep": {
+        "role": "secondary",
+        "displayName": "Deep Ochre"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Section headings (h2), Cormorant Garamond 600, 2.25rem on phones to 3.5rem."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Sub-section headings inside a section, Cormorant 600."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card and panel titles, package names, prices (Cormorant 600, lining figures)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running text, Manrope 16px."
+      },
+      "body-lead": {
+        "displayName": "Lead",
+        "purpose": "Intro paragraphs under headings, ink at 80%."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Occasional uppercase eyebrow in Moss, Manrope 700."
+      }
+    },
+    "shadows": [
+      {
+        "name": "receipt",
+        "value": "0 24px 48px -24px rgb(23 33 27 / 0.55)",
+        "purpose": "The dark estimate panel."
+      },
+      {
+        "name": "docked",
+        "value": "0 12px 32px -12px rgb(23 33 27 / 0.6)",
+        "purpose": "Sticky total bar and floating buttons."
+      },
+      {
+        "name": "rest",
+        "value": "0 1px 2px rgb(23 33 27 / 0.05)",
+        "purpose": "Optional, on highlighted info panels."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "State changes: receipt lines sliding in, totals updating."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.98)",
+        "purpose": "Buttons on :active."
+      },
+      {
+        "name": "duration-state",
+        "value": "350ms",
+        "purpose": "Height and opacity changes in tools."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action, e.g. Chat on WhatsApp.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Chat on WhatsApp</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; min-height: 48px; padding: 0 32px; border-radius: 9999px; background: #17211b; color: #fcfcfa; font: 700 16px/1 Manrope, system-ui, sans-serif; text-decoration: none; transition: background-color 150ms, transform 70ms; } .ds-btn-primary:hover { background: rgb(23 33 27 / 0.85); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid #3f6b3a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action under a package, e.g. Ask about Starter.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\">Ask about Starter</a>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; min-height: 44px; padding: 0 24px; border: 1px solid #17211b; border-radius: 9999px; color: #17211b; font: 700 16px/1 Manrope, system-ui, sans-serif; text-decoration: none; transition: background-color 150ms, color 150ms, transform 70ms; } .ds-btn-outline:hover { background: #17211b; color: #fcfcfa; } .ds-btn-outline:active { transform: scale(0.98); } .ds-btn-outline:focus-visible { outline: 2px solid #3f6b3a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Selectable Card",
+      "kind": "card",
+      "refersTo": "card-selected",
+      "description": "Package choice in the price builder; selected state shown.",
+      "html": "<label class=\"ds-card\"><input type=\"radio\" name=\"p\" checked><span class=\"ds-card-name\">Starter</span><span class=\"ds-card-price\">AED [299]</span><span class=\"ds-card-note\">1 page, up to 5 sections</span></label>",
+      "css": ".ds-card { display: flex; flex-direction: column; width: 220px; padding: 20px; border: 1px solid rgb(23 33 27 / 0.16); border-radius: 16px; background: #fcfcfa; color: #17211b; font-family: Manrope, system-ui, sans-serif; cursor: pointer; transition: border-color 150ms, background-color 150ms; } .ds-card input { position: absolute; opacity: 0; } .ds-card:hover { border-color: rgb(23 33 27 / 0.4); } .ds-card:has(input:checked) { border-color: #3f6b3a; background: #eef1e4; } .ds-card:has(input:focus-visible) { outline: 2px solid #3f6b3a; outline-offset: 2px; } .ds-card-name { font-weight: 700; } .ds-card-price { margin-top: 12px; font: 600 24px/1.2 Cormorant Garamond, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-card-note { margin-top: 4px; font-size: 14px; color: rgb(23 33 27 / 0.8); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Label above, 44px field.",
+      "html": "<label class=\"ds-field\"><span>Business name</span><input class=\"ds-input\" value=\"\"></label>",
+      "css": ".ds-field { display: grid; gap: 8px; width: 280px; font: 700 16px/1.4 Manrope, system-ui, sans-serif; color: #17211b; } .ds-input { min-height: 44px; padding: 0 12px; border: 1px solid rgb(23 33 27 / 0.16); border-radius: 8px; background: #f4f5f1; color: #17211b; font: 400 16px Manrope, system-ui, sans-serif; outline: none; } .ds-input:focus { border-color: #3f6b3a; box-shadow: 0 0 0 2px rgb(79 107 58 / 0.3); }"
+    },
+    {
+      "name": "Navigation Tab",
+      "kind": "nav",
+      "refersTo": "nav-tab",
+      "description": "Ink tab hanging from the hero's top edge.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\">Our work</a><a href=\"#\">Prices</a><a href=\"#\">FAQ</a><a class=\"ds-nav-cta\" href=\"#\">WhatsApp</a></nav>",
+      "css": ".ds-nav { display: inline-flex; align-items: center; gap: 12px; padding: 6px 8px 6px 20px; border-radius: 0 0 24px 24px; background: #17211b; font: 400 14px Manrope, system-ui, sans-serif; } .ds-nav a { color: rgb(246 245 236 / 0.8); text-decoration: none; padding: 12px 8px; } .ds-nav a:hover { color: #fcfcfa; } .ds-nav .ds-nav-cta { padding: 8px 16px; border-radius: 9999px; background: #fcfcfa; color: #17211b; font-weight: 700; } .ds-nav a:focus-visible { outline: 2px solid #b9c79e; outline-offset: 3px; }"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Olive pill marking a recommended choice.",
+      "html": "<span class=\"ds-badge\">Best for a first site</span>",
+      "css": ".ds-badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; background: #3f6b3a; color: #fcfcfa; font: 700 14px/1.4 Manrope, system-ui, sans-serif; }"
+    },
+    {
+      "name": "Receipt Panel",
+      "kind": "custom",
+      "refersTo": "receipt-panel",
+      "description": "Itemised estimate with a total and the WhatsApp action.",
+      "html": "<aside class=\"ds-receipt\"><h4>Your estimate</h4><ul><li><span>Starter package</span><span>AED [299]</span></li><li><span>Extra page × 2</span><span>AED [298]</span></li></ul><p class=\"ds-receipt-k\">Estimate, before VAT</p><p class=\"ds-receipt-total\">AED [597]</p><a href=\"#\">Send on WhatsApp</a></aside>",
+      "css": ".ds-receipt { width: 320px; padding: 28px; border-radius: 16px; background: #17211b; color: #fcfcfa; font: 600 14px/1.5 Cormorant Garamond, system-ui, sans-serif; box-shadow: 0 24px 48px -24px rgb(23 33 27 / 0.55); } .ds-receipt h4 { margin: 0 0 16px; font: 400 20px Manrope, system-ui, sans-serif; } .ds-receipt ul { margin: 0; padding: 0 0 16px; list-style: none; border-bottom: 1px solid rgb(255 255 255 / 0.2); } .ds-receipt li { display: flex; justify-content: space-between; padding: 4px 0; font-variant-numeric: tabular-nums; } .ds-receipt-k { margin: 16px 0 0; color: rgb(246 245 236 / 0.8); } .ds-receipt-total { margin: 4px 0 20px; font: 600 36px/1.1 Cormorant Garamond, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-receipt a { display: flex; justify-content: center; align-items: center; min-height: 48px; border-radius: 9999px; background: #fcfcfa; color: #17211b; font-weight: 700; text-decoration: none; } .ds-receipt a:hover { background: #ffffff; } .ds-receipt a:focus-visible { outline: 2px solid #b9c79e; outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Shopkeeper's Ledger",
+    "overview": "Everything on the site is honest, itemised and calm, like a well-kept shop ledger. Prices are printed, not hinted at. Packages are admission tickets, the estimate is a receipt, the FAQ is a drawer of index cards. Each device is a familiar paper object from a small business's counter, and each one exists to make something countable and checkable at a glance.\n\nThe palette is moss on clean paper, in the spirit of Tessara: a pale pearl page, near-white surfaces, deep green-black ink and a single moss accent. Headings, prices and totals are set in Cormorant Garamond, a calm editorial serif; every working word is Manrope, a clear, open sans. The parts are tactile and friendly: pill buttons that press in, soft-cornered cards, shadows tinted with the ink colour rather than grey. Density is moderate, with generous section spacing so a phone reader never feels crowded.\n\nThe look rejects the flashy tech-startup register (neon, glows, purple gradients), stock-photo filler, and trust styling that implies proof the business does not yet have.",
+    "keyCharacteristics": [
+      "One light theme: pearl page, near-white surfaces, deep green-black ink, one moss accent.",
+      "Cormorant Garamond (600) for headings and prices; Manrope for everything else.",
+      "Paper metaphors as signature components: tickets, receipts, index cards.",
+      "Pill buttons, 16px cards, ink-tinted soft shadows.",
+      "Prices always visible, always itemised."
+    ],
+    "rules": [
+      {
+        "name": "The One Green Rule",
+        "body": "Moss means \"chosen or included\" and nothing else. Never use it for decoration or for paid extras.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-Tinted Shadow Rule",
+        "body": "Shadows are tinted with Moss Black (rgb 23 33 27), never neutral grey or blue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Printed Price Rule",
+        "body": "Every price and total is set in Cormorant 600 with lining, tabular figures. Unconfirmed prices keep their brackets, e.g. \"AED [299]\".",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Cormorant speaks (headings, prices, totals); Manrope works (everything else). Never set running text or small labels in Cormorant.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do keep Moss (#3f6b3a) for chosen and included states, ticks and focus only.",
+      "Do set prices and totals in Cormorant 600 (font-heading) with tabular numbers, brackets kept until confirmed.",
+      "Do use pill buttons (9999px) and 16px cards everywhere; 8px only for inputs.",
+      "Do tint every shadow with Moss Black (rgb 23 33 27).",
+      "Do keep a summary in view for any tool with a running total (sticky panel or docked bar)."
+    ],
+    "donts": [
+      "Don't use neon, glows, purple or blue gradients, or \"AI startup\" styling.",
+      "Don't fill space with generic stock photos of people at laptops; show the real sites.",
+      "Don't add logo walls, star ratings, review counts or statistic styling until they are real.",
+      "Don't use blue- or grey-tinted shadows; every shadow uses Moss Black (rgb 23 33 27).",
+      "Don't use green for paid extras or \"quoted separately\" items; use Deep Ochre or neutral ink."
+    ]
+  }
+}

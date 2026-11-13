@@ -1,0 +1,38 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "dcf-jiggle",
+        "createdAt": "2026-11-12T11:53:13.480Z",
+        "reason": "Claude: cartoon squash-and-stretch on hand-drawn crew (hop, jiggle, plop) is the component's intended character animation; predates this session's text-only edits"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.3, 1.6, .5, 1)",
+        "createdAt": "2026-11-12T11:53:13.920Z",
+        "reason": "Claude: cartoon squash-and-stretch on hand-drawn crew (hop, jiggle, plop) is the component's intended character animation; predates this session's text-only edits"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.3, 1.5, .5, 1)",
+        "createdAt": "2026-11-12T11:53:14.398Z",
+        "reason": "Claude: cartoon squash-and-stretch on hand-drawn crew (hop, jiggle, plop) is the component's intended character animation; predates this session's text-only edits"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.3, 1.4, .5, 1)",
+        "createdAt": "2026-11-12T11:53:14.866Z",
+        "reason": "Claude: cartoon squash-and-stretch on hand-drawn crew (hop, jiggle, plop) is the component's intended character animation; predates this session's text-only edits"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.2, .8, .25, 1.15)",
+        "createdAt": "2026-11-12T11:53:28.480Z",
+        "reason": "Claude: wordmark letters 'stamp' down with a deliberate ink-stamp overshoot, part of the footer's storyboard; predates this session"
+      }
+    ]
+  }
+}

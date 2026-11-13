@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* Moss, Tessara-clean: pearl page, white-ish surfaces, deep green-black ink, one moss accent. Change the values here to retheme. */
+@theme inline {
+  --color-page: #f4f5f1; /* page background */
+  --color-surface: #fcfcfa; /* alternate sections, cards, text on dark */
+  --color-ink: #17211b; /* text and filled buttons */
+  --color-accent: #3f6b3a; /* accent (the hero's rotating word uses a pale sage tint, see prisma-hero) */
+  --color-line: rgb(23 33 27 / 0.13);
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+}
+
+html {
+  scroll-padding-top: 0;
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+}
+
+/* Film grain for the hero video. */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Headings, prices and totals: Cormorant Garamond semibold (as on Tessara). Lining figures so prices read clearly. */
+@utility font-heading {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-feature-settings: "lnum" 1;
+  /* Cormorant has a small x-height; scale it up ~10% everywhere so headings and prices read at their intended size */
+  font-size-adjust: ex-height 0.44;
+}
+
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+p, li {
+  text-wrap: pretty;
+}
