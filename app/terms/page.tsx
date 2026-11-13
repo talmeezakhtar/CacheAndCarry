@@ -4,7 +4,7 @@ import { QUOTE_THRESHOLD, PAGE_LIMIT, aed } from "@/lib/quote";
 import { addOns, carePlans, founding, site } from "@/lib/site";
 
 // Terms of service built from the confirmed decisions log (13 Nov 2026) and the project details PDF:
-// payment (#6), care minimum (#5), delivery (#1), VAT (#12), Arabic (#8), founding offer (#3), small-edit definition (PDF 8),
+// payment (#6), care minimum (#5), delivery (#1), Arabic (#8), founding offer (#3), small-edit definition (PDF 8),
 // revisions and domain ownership (PDF 6). Prices come from lib/site.ts, so they stay in step with the rest of the site.
 // Have a UAE lawyer review before launch.
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ const sections: LegalSection[] = [
     title: "Quotes and prices",
     body: (
       <ul>
-        <li>All prices are in UAE dirhams (AED) and exclude VAT. Where VAT applies, it is shown as a separate line on your quote and invoice.</li>
+        <li>All prices are in UAE dirhams (AED).</li>
         <li>Every quote is in writing, lists each item and is valid for 7 days.</li>
         <li>
           Projects over {aed(QUOTE_THRESHOLD)}, sites of more than {PAGE_LIMIT} pages and anything not on our published price list are always quoted in writing
@@ -154,7 +154,8 @@ const sections: LegalSection[] = [
     body: (
       <p>
         The founding offer is a Starter site for {aed(founding.price)} instead of {aed(founding.was)}, for the first {founding.places} businesses only, in return for a written testimonial and
-        permission to show the site in our work. All other terms apply as normal. The offer ends when the places are taken.
+        permission to show the site in our work. When we publish a founding testimonial, we say it was given in return for the founding discount, and we never ask for a Google review in
+        return for it. All other terms apply as normal. The offer ends when the places are taken.
       </p>
     ),
   },

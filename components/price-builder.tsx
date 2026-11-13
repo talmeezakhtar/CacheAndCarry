@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Check, ChevronDown, Link2, Minus, Plus, X } from "lucide-react";
-import { addOns as menu, carePlans, packages, paymentTerms, wa, type AddOn } from "@/lib/site";
-import { aed, message, needsQuote, quoteReason, total, type Line } from "@/lib/quote";
+import { addOns as menu, carePlans, founding as offer, packages, paymentTerms, site, wa, type AddOn } from "@/lib/site";
+import { aed, followPages, message, needsQuote, quoteReason, total, type Line } from "@/lib/quote";
 
 /*
  * Price builder (PDF 6.9). Choices on the left, an itemised receipt on the right that stays in view
@@ -25,12 +25,21 @@ const groups = [...new Set(menu.map((a) => a.group))];
 const ease = [0.16, 1, 0.3, 1] as const;
 const MAX_PAGES = 12;
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+/** Add-ons priced per page of the site (not "Extra page", which adds pages): they follow the page count. */
+const perPageLabels = menu.filter((a) => a.perPage && a.label !== "Extra page").map((a) => a.label);
+const pagesFor = (key: Key, qty: Record<string, number>) => {
+  const p = choices.find((c) => c.key === key)!.pkg;
+  return p ? (p.pages ?? 1) + (qty["Extra page"] ?? 0) : 0;
+};
+/** Rush delivery and the like apply to some packages only. */
+const fits = (a: AddOn, pkgLabel?: string) => !a.only || (pkgLabel != null && a.only.includes(pkgLabel));
+const offerOpen = offer.left > 0;
 
 /** "Arabic version, per page" with 3 pages becomes "Arabic version × 3". */
 const lineFor = (a: AddOn, n: number): Line =>
   a.perPage && n > 1 ? { label: `${a.label.replace(/, per page$/, "")} × ${n}`, price: a.price == null ? null : a.price * n } : a;
 
-/** Read ?p=business&a=extra-page.2,simple-logo&c=care into builder state; unknown values are ignored. */
+/** Read ?p=business&a=extra-page.2,simple-logo&c=care&f=1 into builder state; unknown values are ignored. */
 function parse(search: string) {
   const q = new URLSearchParams(search);
   const pick = choices.find((c) => c.key.toLowerCase() === q.get("p"))?.key;
@@ -42,13 +51,27 @@ function parse(search: string) {
   }
   const c = q.get("c");
   const care = c === SELF ? SELF : carePlans.find((p) => slug(p.label) === c)?.label;
-  return { pick, qty, care };
+  return { pick, qty, care, founding: offerOpen && q.get("f") === "1" };
+}
+
+/** The builder's choices as a query string (the inverse of parse). */
+function serialise(pick: Key, qty: Record<string, number>, care: string, founding: boolean) {
+  const q = new URLSearchParams();
+  if (pick !== "Starter") q.set("p", pick.toLowerCase());
+  const a = Object.entries(qty)
+    .filter(([, n]) => n > 0)
+    .map(([label, n]) => (n > 1 ? `${slug(label)}.${n}` : slug(label)));
+  if (a.length) q.set("a", a.join(","));
+  if (care !== carePlans[0].label) q.set("c", care === SELF ? SELF : slug(care));
+  if (founding && pick === "Starter") q.set("f", "1");
+  return q.toString().replace(/%2C/g, ",");
 }
 
 export function PriceBuilder() {
   const [pick, setPick] = useState<Key>("Starter");
   const [qty, setQty] = useState<Record<string, number>>({});
   const [care, setCare] = useState<string>(carePlans[0].label);
+  const [founding, setFounding] = useState(false);
   const [name, setName] = useState("");
   const [area, setArea] = useState("");
   const [copied, setCopied] = useState(false);
@@ -61,43 +84,52 @@ export function PriceBuilder() {
       if (s.pick) setPick(s.pick);
       if (Object.keys(s.qty).length) setQty(s.qty);
       if (s.care) setCare(s.care);
+      if (s.founding) setFounding(true);
       restored.current = true;
     });
     return () => clearTimeout(t);
   }, []);
 
+  const qs = serialise(pick, qty, care, founding);
   // Keep the link in step with the choices (replaceState: no history entries, no scroll jump).
   useEffect(() => {
     if (!restored.current) return;
-    const q = new URLSearchParams();
-    if (pick !== "Starter") q.set("p", pick.toLowerCase());
-    const a = Object.entries(qty)
-      .filter(([, n]) => n > 0)
-      .map(([label, n]) => (n > 1 ? `${slug(label)}.${n}` : slug(label)));
-    if (a.length) q.set("a", a.join(","));
-    if (care !== carePlans[0].label) q.set("c", care === SELF ? SELF : slug(care));
-    const qs = q.toString().replace(/%2C/g, ",");
     history.replaceState(null, "", `${location.pathname}${qs ? `?${qs}` : ""}${location.hash}`);
-  }, [pick, qty, care]);
+  }, [qs]);
 
   const choice = choices.find((c) => c.key === pick)!;
   const pkg = choice.pkg;
-  const pkgLine: Line | null = pkg ? { label: pkg.label, price: pkg.price } : null;
+  const isFounding = offerOpen && founding && pick === "Starter";
+  const pkgLine: Line | null = pkg ? { label: pkg.label, price: isFounding ? offer.price : pkg.price } : null;
   const included = new Set<string>(pkg?.items ?? []);
-  const chosen = pkgLine ? menu.filter((a) => (qty[a.label] ?? 0) > 0 && !included.has(a.label)) : [];
+  const pages = pagesFor(pick, qty); // more than 8 pages is quoted too
+  /** Per-page add-ons never count more pages than the site has (a restored link could ask for more). */
+  const count = (a: AddOn) => (perPageLabels.includes(a.label) ? Math.min(qty[a.label] ?? 0, pages) : (qty[a.label] ?? 0));
+  const chosen = pkgLine ? menu.filter((a) => count(a) > 0 && !included.has(a.label) && fits(a, pkg?.label)) : [];
   const kept = menu.filter((a) => (qty[a.label] ?? 0) > 0).length; // add-ons waiting while "Bigger site" is picked
-  const lines = chosen.map((a) => lineFor(a, qty[a.label]));
+  const lines = chosen.map((a) => lineFor(a, count(a)));
   const sum = pkgLine ? total([pkgLine, ...lines]) : null;
-  const pages = pkg ? (pkg.pages ?? 1) + (qty["Extra page"] ?? 0) : 0; // more than 8 pages is quoted too
   const over = needsQuote(sum, pages);
   const plan = carePlans.find((p) => p.label === care) ?? null;
   const careLine: Line | null = plan ? { label: plan.label, price: plan.price } : null;
-  const text = message(pkgLine, lines, name, area, careLine, pages);
+  const link = `${site.url}/${qs ? `?${qs}` : ""}#builder`;
+  const text = message(pkgLine, lines, name, area, { care: careLine, pages, founding: isFounding, link });
   const firstYear = sum != null && plan ? { monthly: sum + plan.price * 12, yearly: sum + plan.price * 10 } : null;
 
-  const set = (label: string, n: number) => setQty((q) => ({ ...q, [label]: Math.max(0, Math.min(MAX_PAGES, n)) }));
+  /** Change the package and add-ons together, so per-page add-ons follow a new page count. */
+  const update = (nextPick: Key, nextQty: Record<string, number>) => {
+    const from = pagesFor(pick, qty);
+    const to = pagesFor(nextPick, nextQty);
+    setPick(nextPick);
+    setQty(from > 0 && to > 0 && from !== to ? followPages(nextQty, perPageLabels, from, to) : nextQty);
+  };
+  const maxFor = (a: AddOn) => (perPageLabels.includes(a.label) ? Math.min(MAX_PAGES, pages) : MAX_PAGES);
+  const set = (label: string, n: number) => {
+    const a = menu.find((m) => m.label === label)!;
+    update(pick, { ...qty, [label]: Math.max(0, Math.min(maxFor(a), n)) });
+  };
   /** Per-page add-ons start at the site's page count: Arabic for a 4-page Business site is 4 pages. */
-  const startCount = (a: AddOn) => (a.perPage && a.label !== "Extra page" ? Math.max(1, (pkg?.pages ?? 1) + (qty["Extra page"] ?? 0)) : 1);
+  const startCount = (a: AddOn) => (perPageLabels.includes(a.label) ? Math.max(1, pages) : 1);
 
   const copyLink = async () => {
     try {
@@ -110,7 +142,7 @@ export function PriceBuilder() {
   };
 
   const headline = pkgLine ? aed(sum) : "Quoted on WhatsApp";
-  const kicker = !pkgLine ? "Next step" : over ? "Estimate, to confirm in writing" : "Estimate, before VAT";
+  const kicker = !pkgLine ? "Next step" : over ? "Estimate, to confirm in writing" : "Estimate";
   const send = (compact = false) => (
     <a
       href={wa(text)}
@@ -134,9 +166,9 @@ export function PriceBuilder() {
                 {choices.map((c) => (
                   <label
                     key={c.key}
-                    className="group relative flex cursor-pointer flex-col rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-ink/40 has-checked:border-accent has-checked:bg-[#eef1e4] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent sm:p-5"
+                    className="group relative flex cursor-pointer flex-col rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-ink/40 has-checked:border-accent has-checked:bg-sage-wash has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent sm:p-5"
                   >
-                    <input type="radio" name="package" checked={pick === c.key} onChange={() => setPick(c.key)} className="sr-only" />
+                    <input type="radio" name="package" checked={pick === c.key} onChange={() => update(c.key, qty)} className="sr-only" />
                     <span
                       aria-hidden
                       className="absolute top-4 right-4 grid size-6 place-items-center rounded-full border border-ink/25 text-surface transition-colors group-has-checked:border-accent group-has-checked:bg-accent"
@@ -144,7 +176,9 @@ export function PriceBuilder() {
                       <Check className="size-3.5" strokeWidth={3} />
                     </span>
                     <span className="font-bold">{c.pkg ? c.pkg.label : "Bigger site"}</span>
-                    <span className="mt-1 font-heading text-xl tabular-nums sm:mt-3 sm:text-2xl">{c.pkg ? aed(c.pkg.price) : "Quoted"}</span>
+                    <span className="mt-1 font-heading text-xl tabular-nums sm:mt-3 sm:text-2xl">
+                      {c.pkg ? aed(c.key === "Starter" && isFounding ? offer.price : c.pkg.price) : "Quoted"}
+                    </span>
                     <span className="mt-1 text-sm text-ink/80">{c.pkg ? c.pkg.note : "Pro or Store, priced in writing"}</span>
                   </label>
                 ))}
@@ -154,6 +188,15 @@ export function PriceBuilder() {
                   <span className="font-bold text-ink">Includes:</span> {pkg.items.join("; ")}.
                 </p>
               )}
+              {pick === "Starter" && offerOpen && (
+                <label className="mt-3 flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm has-checked:border-accent has-checked:bg-sage-wash has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent">
+                  <input type="checkbox" checked={founding} onChange={(e) => setFounding(e.target.checked)} className="size-4 accent-accent" />
+                  <span>
+                    <span className="font-bold">Founding place: {aed(offer.price)} instead of {aed(offer.was)}</span>, in return for a short testimonial.{" "}
+                    {offer.left < offer.places ? `${offer.left} of ${offer.places} left.` : `${offer.places} places.`}
+                  </span>
+                </label>
+              )}
             </fieldset>
 
             {pkgLine ? (
@@ -161,7 +204,7 @@ export function PriceBuilder() {
                 <div className="flex items-baseline justify-between gap-4">
                   <h4 className="font-heading text-xl">Add what you need</h4>
                   {chosen.length > 0 && (
-                    <button type="button" onClick={() => setQty({})} className="min-h-11 text-sm font-bold text-accent underline-offset-4 hover:underline">
+                    <button type="button" onClick={() => update(pick, {})} className="min-h-11 text-sm font-bold text-accent underline-offset-4 hover:underline">
                       Clear add-ons
                     </button>
                   )}
@@ -172,16 +215,16 @@ export function PriceBuilder() {
                       <legend className="mb-3 text-sm font-bold text-ink/80">{g}</legend>
                       <div className="grid items-start gap-2.5 sm:grid-cols-2">
                         {menu
-                          .filter((a) => a.group === g)
+                          .filter((a) => a.group === g && fits(a, pkg?.label))
                           .map((a) => {
-                            const n = qty[a.label] ?? 0;
+                            const n = count(a);
                             const inPkg = included.has(a.label);
                             const on = n > 0 && !inPkg;
                             return (
                               <div
                                 key={a.label}
                                 className={`rounded-xl border transition-colors ${
-                                  inPkg ? "border-dashed border-ink/25" : on ? "border-accent bg-[#eef1e4]" : "border-line bg-surface hover:border-ink/40"
+                                  inPkg ? "border-dashed border-ink/25" : on ? "border-accent bg-sage-wash" : "border-line bg-surface hover:border-ink/40"
                                 }`}
                               >
                                 <label className={`flex min-h-14 items-center gap-3 px-4 py-3 ${inPkg ? "" : "cursor-pointer"}`}>
@@ -224,7 +267,7 @@ export function PriceBuilder() {
                                         <button
                                           type="button"
                                           aria-label="One more page"
-                                          disabled={n >= MAX_PAGES}
+                                          disabled={n >= maxFor(a)}
                                           onClick={() => set(a.label, n + 1)}
                                           className="grid size-10 place-items-center rounded-full hover:bg-ink/10 disabled:opacity-40"
                                         >
@@ -232,7 +275,11 @@ export function PriceBuilder() {
                                         </button>
                                       </span>
                                     </div>
-                                    {n >= MAX_PAGES && <p className="pb-1 text-ink/80">More than {MAX_PAGES}? Ask in your message.</p>}
+                                    {n >= maxFor(a) && (
+                                      <p className="pb-1 text-ink/80">
+                                        {maxFor(a) < MAX_PAGES ? `That's every page of your site.` : `More than ${MAX_PAGES}? Ask in your message.`}
+                                      </p>
+                                    )}
                                   </div>
                                 )}
                               </div>
@@ -266,7 +313,7 @@ export function PriceBuilder() {
                   (o) => (
                     <label
                       key={o.key}
-                      className="flex min-h-14 cursor-pointer flex-col justify-center rounded-xl border border-line bg-surface px-4 py-3 transition-colors hover:border-ink/40 has-checked:border-accent has-checked:bg-[#eef1e4] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
+                      className="flex min-h-14 cursor-pointer flex-col justify-center rounded-xl border border-line bg-surface px-4 py-3 transition-colors hover:border-ink/40 has-checked:border-accent has-checked:bg-sage-wash has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
                     >
                       <input type="radio" name="care" checked={care === o.key} onChange={() => setCare(o.key)} className="sr-only" />
                       <span className="font-bold">{o.title}</span>
@@ -285,7 +332,7 @@ export function PriceBuilder() {
 
             <ul className="mt-5 space-y-2.5 text-sm">
               <li className="flex justify-between gap-4">
-                <span>{pkgLine ? `${pkgLine.label} package` : "Bigger site (Pro or Store)"}</span>
+                <span>{pkgLine ? `${pkgLine.label} package${isFounding ? ", founding place" : ""}` : "Bigger site (Pro or Store)"}</span>
                 <span className="tabular-nums">{pkgLine ? aed(pkgLine.price) : "Quoted"}</span>
               </li>
               <AnimatePresence initial={false}>
@@ -320,8 +367,8 @@ export function PriceBuilder() {
                 {!pkgLine
                   ? "We reply with a written quote."
                   : over
-                    ? `It's ${quoteReason(sum, pages)}, so we confirm it in writing. Before VAT.`
-                    : `${paymentTerms(pkgLine.label)}. Before VAT.`}
+                    ? `It's ${quoteReason(sum, pages)}, so we confirm it in writing.`
+                    : `${paymentTerms(pkgLine.label)}.`}
               </p>
             </div>
 
@@ -350,7 +397,7 @@ export function PriceBuilder() {
                   autoComplete="organization"
                   dir="auto"
                   maxLength={60}
-                  className="min-h-11 rounded-lg border border-white/25 bg-white/10 px-3 text-base text-surface outline-none focus:border-[#b9c79e] focus:ring-2 focus:ring-[#b9c79e]/40"
+                  className="min-h-11 rounded-lg border border-white/25 bg-white/10 px-3 text-base text-surface outline-none focus:border-sage-light focus:ring-2 focus:ring-sage-light/40"
                 />
               </label>
               <label className="grid gap-1.5 text-sm">
@@ -363,7 +410,7 @@ export function PriceBuilder() {
                   autoComplete="address-level2"
                   dir="auto"
                   maxLength={40}
-                  className="min-h-11 rounded-lg border border-white/25 bg-white/10 px-3 text-base text-surface outline-none focus:border-[#b9c79e] focus:ring-2 focus:ring-[#b9c79e]/40"
+                  className="min-h-11 rounded-lg border border-white/25 bg-white/10 px-3 text-base text-surface outline-none focus:border-sage-light focus:ring-2 focus:ring-sage-light/40"
                 />
               </label>
             </div>

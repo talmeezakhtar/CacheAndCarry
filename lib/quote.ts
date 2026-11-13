@@ -31,24 +31,35 @@ export const quoteReason = (sum: number | null, pages = 0) =>
     .join(" and ");
 
 /**
+ * Per-page add-ons (Arabic, copywriting) follow the site's page count: a count that matched the old page count moves
+ * with it, and no count can exceed the pages the site has. `from` and `to` are the old and new page counts.
+ */
+export const followPages = (qty: Record<string, number>, labels: string[], from: number, to: number) => {
+  const out = { ...qty };
+  for (const l of labels) if (out[l] > 0) out[l] = out[l] === from ? to : Math.min(out[l], to);
+  return out;
+};
+
+/** Extra details for the message: the care plan (null: hosts it themselves), page count, founding place and the builder link. */
+export type MessageOptions = { care?: Line | null; pages?: number; founding?: boolean; link?: string };
+
+/**
  * The message the visitor sends on WhatsApp, built from the same lines as the total.
  * `pkg` null means "quoted package" (Pro or Store). Wording follows the PDF's templates (section 5).
  * Over AED 1,000 the figure is still sent (prices shown upfront), with a request for the written quote.
- * `care` is the monthly plan they picked, or null when they will host it themselves.
+ * Prices carry no VAT: the business is not VAT-registered (add a VAT line here once it is).
  */
-export const message = (pkg: Line | null, addOns: Line[], name: string, area: string, care?: Line | null, pages = 0) => {
+export const message = (pkg: Line | null, addOns: Line[], name: string, area: string, { care, pages = 0, founding = false, link }: MessageOptions = {}) => {
   const out = [pkg ? `Hi, I'm interested in the ${pkg.label} package. Could you tell me more?` : "Hi, I'd like a quote for a bigger site or an online store."];
   if (name.trim()) out.push(`Business: ${name.trim()}`);
   if (area.trim()) out.push(`Area: ${area.trim()}`);
   if (pkg) {
+    if (founding) out.push(`Founding place: yes, ${aed(pkg.price)} in return for a short testimonial.`);
     if (addOns.length) out.push("Add-ons: " + addOns.map((a) => `${a.label} (${aed(a.price)})`).join(", "));
     const sum = total([pkg, ...addOns]);
-    out.push(
-      needsQuote(sum, pages)
-        ? `Estimate: ${aed(sum)}, before VAT. It's ${quoteReason(sum, pages)}, so please send a written quote.`
-        : `Estimate: ${aed(sum)}, before VAT.`,
-    );
+    out.push(needsQuote(sum, pages) ? `Estimate: ${aed(sum)}. It's ${quoteReason(sum, pages)}, so please send a written quote.` : `Estimate: ${aed(sum)}.`);
   }
   if (care !== undefined) out.push(care ? `Care plan: ${care.label}, ${aed(care.price)} a month.` : "Care plan: none, I'll host it myself.");
+  if (link) out.push(`My choices: ${link}`);
   return out.join("\n");
 };

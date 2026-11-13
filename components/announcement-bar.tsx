@@ -15,7 +15,7 @@ export function AnnouncementBar({ price, was, left, places, href }: { price: num
   return (
     <div className="relative shrink-0 bg-accent text-surface">
       <div className="mx-auto flex min-h-12 max-w-[1200px] items-center justify-center gap-x-3 py-2 pl-4 pr-12 text-sm sm:gap-x-4 sm:pl-12 sm:text-[15px]">
-        <span className="hidden shrink-0 rounded-full bg-[#b9c79e] px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.08em] text-ink md:inline">
+        <span className="hidden shrink-0 rounded-full bg-sage-light px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.08em] text-ink md:inline">
           Founding offer
         </span>
 
@@ -23,15 +23,14 @@ export function AnnouncementBar({ price, was, left, places, href }: { price: num
           {/* phones: the deal and the scarcity only */}
           <span className="sm:hidden">
             <strong>Starter site {aed(price)}</strong>
-            <span className="text-surface/85"> · {left} left</span>
+            <span className="text-surface/85"> · {left < places ? `${left} left` : `${places} places`}</span>
           </span>
           {/* larger screens: the full offer, still one line */}
           <span className="max-sm:hidden">
             Your Starter site for <s className="text-surface/85 decoration-1">{aed(was)}</s> <strong className="text-base">{aed(price)}</strong>
             <span className="text-surface/85"> in return for a short testimonial.</span>{" "}
-            <strong>
-              Only {left} of {places} places left.
-            </strong>
+            {/* "Only N left" once places are taken; until then just the number, so the bar never overstates scarcity */}
+            <strong>{left < places ? `Only ${left} of ${places} places left.` : `${places} founding places.`}</strong>
           </span>
         </p>
 

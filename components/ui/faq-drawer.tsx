@@ -14,7 +14,6 @@ const no = (i: number) => `Q.${String(i + 1).padStart(2, "0")}`;
 export function FaqDrawer({
   id,
   cards,
-  label,
   title,
   lead,
   drawer,
@@ -24,7 +23,6 @@ export function FaqDrawer({
 }: {
   id?: string;
   cards: readonly Card[];
-  label: string;
   title: string;
   lead: string;
   drawer: string;
@@ -39,7 +37,6 @@ export function FaqDrawer({
       <style>{CSS}</style>
       <div className="fq-wrap">
         <header className="fq-head">
-          <p className="fq-label">{label}</p>
           <h2 className="fq-title" id="fq-title">{title}</h2>
           <p className="fq-lead">{lead}</p>
           {/* in the sticky head, so the way to ask stays in view while the cards scroll */}
@@ -90,14 +87,14 @@ export default FaqDrawer;
 const CSS = `
 .fq {
   /* drawer metal, tinted to the Moss Light page */
-  --desk: #fcfcfa;
+  --desk: var(--color-surface);
   --face: #e2e2d2;
   --face-hi: #efefe3;
   --face-lo: #cfd0bd;
   --well: #d3d4c1;
-  --ink: #17211b;
+  --ink: var(--color-ink);
   --ink-2: rgb(23 33 27 / 0.8);
-  --accent: #3f6b3a;
+  --accent: var(--color-accent);
   --hl: rgb(255 255 255 / 0.85);
   --sh: 23 33 27;
   --sh-a: 0.22;
@@ -139,7 +136,6 @@ const CSS = `
 .fq-head { position: sticky; top: 24px; padding-top: 34px; }
 .fq-wrap { align-items: stretch; } /* the head's column spans the drawer's height, so sticky has room to work */
 .fq-head { align-self: start; }
-.fq-label { margin-bottom: 12px; font-size: 14px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
 .fq-title { font-family: var(--font-cormorant), Georgia, serif; font-weight: 600; font-size: clamp(36px, 4cqi, 48px); line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; }
 .fq-lead { margin-top: 18px; max-width: 36ch; font-size: 18px; color: var(--ink-2); text-wrap: pretty; }
 

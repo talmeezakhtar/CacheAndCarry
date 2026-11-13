@@ -33,9 +33,9 @@ export type Plan6 = {
 };
 
 const CARD_PALETTES: Record<Palette6, { base: string }> = {
-  sage: { base: "bg-[#eef1e4]" },
-  olive: { base: "bg-[#e6ebdb]" },
-  ochre: { base: "bg-[#f4ecda]" },
+  sage: { base: "bg-sage-wash" },
+  olive: { base: "bg-sage-soft" },
+  ochre: { base: "bg-ochre-wash" },
 };
 
 function PlanCard({ plan }: { plan: Plan6 }) {

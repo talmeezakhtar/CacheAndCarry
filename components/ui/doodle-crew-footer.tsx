@@ -239,7 +239,7 @@ const PALETTE = { background: "#F6F5F1", ink: "#141A22", accent: "#047857" }
 // Letters: C0 A1 C2 H3 E4 _5 &6 _7 C8 A9 R10 R11 Y12
 const DEFAULT_CREW: CrewMember[] = [
   { kind: "yeti", letter: 0, seat: "front", offset: -0.32, name: "Bruno", says: "Got a shop? We'll build its website." },
-  { kind: "bird", letter: 3, seat: "top", offset: -0.3, name: "Pip", says: "Live in five working days." },
+  { kind: "bird", letter: 3, seat: "top", offset: -0.3, name: "Pip", says: "Starter sites: live in five working days." },
   { kind: "kid", letter: 4, seat: "top", offset: -0.05, name: "Juno", says: "Your domain stays in your name." },
   { kind: "ghost", letter: 6, seat: "behind", offset: 0, name: "Boo", says: "Boo! Every price is on the page." },
   { kind: "mushroom", letter: 9, seat: "front", offset: 0.1, scale: 0.95, name: "Morel", says: "English and Arabic, both." },
@@ -1067,16 +1067,9 @@ export default function DoodleCrewFooter({
                     width={(bx[1] - bx[0]) * p.scale}
                     height={(bottom - top) * p.scale}
                     rx={12}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={(p.m.name || p.m.kind) + (p.m.says ? ": " + p.m.says : "")}
+                    aria-hidden
                     onClick={() => poke(p.i)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault()
-                        poke(p.i)
-                      }
-                    }}
+                  /* a pointer-only toy: the crew's lines repeat facts said elsewhere, so it stays out of the Tab order */
                   />
                 )
               })}

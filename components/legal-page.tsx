@@ -7,7 +7,7 @@ export type LegalSection = { id: string; title: string; body: React.ReactNode };
 /** Shared layout for /privacy and /terms: title, last-updated date, contents, numbered sections, contact. */
 export function LegalPage({ title, updated, intro, sections }: { title: string; updated: string; intro: React.ReactNode; sections: LegalSection[] }) {
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-[760px] px-4 py-16 sm:px-6 md:py-24">
+    <main id="main" className="mx-auto min-h-dvh w-full max-w-[760px] px-4 py-16 sm:px-6 md:py-24">
       <Link href="/" className="font-heading text-xl">
         {site.name}
       </Link>
