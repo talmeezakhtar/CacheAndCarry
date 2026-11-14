@@ -5,14 +5,14 @@ import * as React from "react"
 import { wa } from "@/lib/site"
 
 /**
- * Doodle Crew Footer, adapted for Cache & Carry.
+ * Doodle Crew Footer, adapted for Vibe & Pixel.
  *
  * The wordmark is stamped across the footer in dry-brush ink, and a crew of hand-drawn characters
  * lives on the letters. Scroll it into view and it plays out like a short storyboard: the ground
  * line draws, the letters stamp down, the crew arrives, the doodles start to fall. Then every eye
  * follows the pointer, and a click on a character makes it hop and say its line.
  *
- * Changes from the original: defaults are Cache & Carry's content and links, the page passes the
+ * Changes from the original: defaults are Vibe & Pixel's content and links, the page passes the
  * dark night/cream/sand palette, and the food doodles and social links are gone.
  * No dependencies: every drawing is inline SVG, and the ink texture is an SVG filter.
  */
@@ -237,14 +237,14 @@ export interface DoodleCrewFooterProps {
 
 const PALETTE = { background: "#F6F5F1", ink: "#141A22", accent: "#047857" }
 
-// Letters: C0 A1 C2 H3 E4 _5 &6 _7 C8 A9 R10 R11 Y12
+// Letters: V0 I1 B2 E3 _4 &5 _6 P7 I8 X9 E10 L11 (the default wordmark, "VIBE & PIXEL")
 const DEFAULT_CREW: CrewMember[] = [
   { kind: "yeti", letter: 0, seat: "front", offset: -0.32, name: "Bruno", says: "Got a shop? We'll build its website." },
-  { kind: "bird", letter: 3, seat: "top", offset: -0.3, name: "Pip", says: "Starter sites: live in five working days." },
-  { kind: "kid", letter: 4, seat: "top", offset: -0.05, name: "Juno", says: "Your domain stays in your name." },
-  { kind: "ghost", letter: 6, seat: "behind", offset: 0, name: "Boo", says: "Boo! Every price is on the page." },
+  { kind: "bird", letter: 2, seat: "top", offset: -0.3, name: "Pip", says: "Starter sites: live in five working days." },
+  { kind: "kid", letter: 3, seat: "top", offset: -0.05, name: "Juno", says: "Your domain stays in your name." },
+  { kind: "ghost", letter: 5, seat: "behind", offset: 0, name: "Boo", says: "Boo! Every price is on the page." },
   { kind: "mushroom", letter: 9, seat: "front", offset: 0.1, scale: 0.95, name: "Morel", says: "English and Arabic, both." },
-  { kind: "cat", letter: 12, seat: "front", offset: 0.42, flip: true, name: "Patch", says: "Questions? Ask us on WhatsApp." },
+  { kind: "cat", letter: 11, seat: "front", offset: 0.42, flip: true, name: "Patch", says: "Questions? Ask us on WhatsApp." },
 ]
 
 const DEFAULT_COLUMNS: FooterColumn[] = [
@@ -520,13 +520,13 @@ const Link = ({ link, className }: { link: FooterLink; className?: string }) =>
   )
 
 export default function DoodleCrewFooter({
-  wordmark = "CACHE & CARRY",
-  brand = "Cache & Carry",
+  wordmark = "VIBE & PIXEL",
+  brand = "Vibe & Pixel",
   blurb = "Websites for small businesses in Sharjah and Dubai, in English and Arabic. Built by one studio, with a real person on WhatsApp.",
   tagline = "Your business online in 5 working days.",
   columns = DEFAULT_COLUMNS,
   actions = [],
-  copyright = "© Cache & Carry · Working name, not yet registered", // PDF 2: replace once the entity is registered
+  copyright = "© Vibe & Pixel",
   legal = [{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }],
   backToTop = true,
   crew = DEFAULT_CREW,
@@ -946,6 +946,7 @@ export default function DoodleCrewFooter({
   return (
     <footer
       ref={rootRef}
+      data-track="footer"
       className={"dcf" + (className ? " " + className : "")}
       data-play={play || reduced ? "1" : "0"}
       data-interactive={interactive ? "1" : "0"}

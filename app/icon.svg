@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- C&C monogram: ink tile, linen letters, moss ampersand (DESIGN.md palette). Stand-in until a designed mark exists. -->
+  <!-- Vibe & Pixel "VP" mark: same drawing as components/brand-mark.tsx (keep them in step). -->
   <rect width="64" height="64" rx="14" fill="#17211b"/>
-  <text x="32" y="43" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700" letter-spacing="-1" fill="#fcfcfa">C<tspan fill="#b9c79e">&amp;</tspan>C</text>
+  <g fill="none" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(0.5 0.5)">
+    <path d="M11 19 L20.5 44 L30 19" stroke="#fcfcfa"/>
+    <path d="M37.5 45 V19 H44 a7.5 7.5 0 0 1 0 15 H37.5" stroke="#b9c79e"/>
+  </g>
 </svg>

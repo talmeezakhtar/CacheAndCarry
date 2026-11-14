@@ -40,7 +40,7 @@ export function SiteNav({
     >
       {!home && (
         <Link href={path("/")} className="flex min-h-11 shrink-0 items-center ps-2 pe-3 font-heading text-lg text-surface max-sm:hidden md:ps-0">
-          Cache &amp; Carry
+          Vibe &amp; Pixel
         </Link>
       )}
       {/* Only the links scroll on narrow screens; the WhatsApp button always stays in view. */}
@@ -69,6 +69,8 @@ export function SiteNav({
       {/* Outside the scrolling links so it is always in view; a short label on phones. */}
       <a
         href={switchTo.href}
+        data-event="lang_switch"
+        data-to={switchTo.lang}
         lang={switchTo.lang}
         hrefLang={switchTo.lang}
         aria-label={switchTo.label}
@@ -79,6 +81,7 @@ export function SiteNav({
       </a>
       <a
         href={wa(t(messages.general))}
+        data-track="nav"
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full bg-surface px-4 font-bold text-ink transition-colors hover:bg-page"

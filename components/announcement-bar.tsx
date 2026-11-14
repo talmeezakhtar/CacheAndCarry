@@ -53,6 +53,8 @@ export function AnnouncementBar({ price, was, left, places, href }: { price: num
 
         <a
           href={href}
+          data-track="offer_bar"
+          data-package="Starter"
           target="_blank"
           rel="noopener noreferrer"
           className="group inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full bg-surface px-3.5 text-sm font-bold text-ink transition-colors hover:bg-white focus-visible:outline-surface sm:px-4"
@@ -66,6 +68,7 @@ export function AnnouncementBar({ price, was, left, places, href }: { price: num
       <button
         type="button"
         onClick={() => setOpen(false)}
+        data-event="offer_close"
         aria-label={t("Close the founding offer")}
         className="absolute end-1 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full text-surface/85 transition-colors hover:bg-white/10 hover:text-surface focus-visible:outline-surface"
       >

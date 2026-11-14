@@ -10,7 +10,7 @@ import "./globals.css";
 const sans = Manrope({ variable: "--font-manrope", subsets: ["latin"] });
 const serif = Cormorant_Garamond({ variable: "--font-cormorant", subsets: ["latin"], weight: ["600"] });
 
-export const metadata: Metadata = { title: "Page not found · Cache & Carry", robots: { index: false } };
+export const metadata: Metadata = { title: "Page not found · Vibe & Pixel", robots: { index: false } };
 
 export default function GlobalNotFound() {
   const ar = (k: string) => translate("ar", k);

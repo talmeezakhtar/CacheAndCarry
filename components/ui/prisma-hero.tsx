@@ -107,7 +107,7 @@ export function PrismaHero({ video, videoSmall, poster, whatsappHref }: { video?
             {/* The offer leads; the name is a small mark above it (the nav and the footer carry it too). */}
             <div className="col-span-12 lg:col-span-8">
               <motion.p {...rise(0.1)} className="font-heading text-2xl tracking-tight text-surface/90 md:text-3xl">
-                Cache &amp; Carry
+                Vibe &amp; Pixel
               </motion.p>
               <h1 className="mt-3 font-heading text-[12.5vw] leading-[0.95] tracking-[-0.03em] sm:text-[9vw] lg:text-[min(6.6vw,6.75rem)]">
                 <WordsPullUp text={t("Your business online in 5\u00a0working days.")} />
@@ -121,6 +121,7 @@ export function PrismaHero({ video, videoSmall, poster, whatsappHref }: { video?
               <motion.a
                 {...rise(0.7)}
                 href={whatsappHref}
+                data-track="hero"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-surface py-1 ps-5 pe-1 font-bold text-ink transition-all hover:gap-3 hover:bg-page active:scale-[0.98]"

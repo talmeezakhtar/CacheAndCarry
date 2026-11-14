@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * Two-plan diff pricing table, adapted for Cache & Carry. Changes from the original:
+ * Two-plan diff pricing table, adapted for Vibe & Pixel. Changes from the original:
  * - prices format with thousands separators and an optional "from" (AED 2,499, "from AED 2,499")
  * - reading sizes from DESIGN.md (14px rows, 12px labels) instead of 10-12px text
  * - a flat summary band instead of a decorative gradient; classes merged with cn() so className can override

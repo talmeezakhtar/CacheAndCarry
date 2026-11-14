@@ -9,9 +9,9 @@ import type { Line } from "./quote";
 export const founding = { price: 199, was: 299, left: 5, places: 5 };
 
 export const site = {
-  name: "Cache & Carry",
+  name: "Vibe & Pixel",
   // Set NEXT_PUBLIC_SITE_URL to the real domain before launch: canonical, sitemap, robots and structured data all use it.
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://cacheandcarry.ae", // fallback is a placeholder, availability not checked (PDF section 1)
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://vibeandpixel.com", // fallback is a placeholder, availability not checked (PDF section 1)
   whatsapp: "971503482765", // digits only with country code (wa.me format)
   phone: "+971 50 348 2765", // the same number, written for people
   delivery: "5 working days", // confirmed delivery promise for Starter, counted from payment and content (decisions log #1, terms)
@@ -23,7 +23,7 @@ export const shareImage = {
   url: "/opengraph-image",
   width: 1200,
   height: 630,
-  alt: "Cache & Carry: websites for small businesses in Sharjah and Dubai, in English and Arabic",
+  alt: "Vibe & Pixel: websites for small businesses in Sharjah and Dubai, in English and Arabic",
 };
 
 /** Build packages (PDF 6.2). Pro and Store are over AED 1,000, so they are quoted in writing. */
@@ -83,7 +83,7 @@ export const messages = {
   starter: "Hi, I'd like to start with the Starter package. Could you suggest what else my business needs?",
   package: "Hi, I'm interested in the {name} package. Could you tell me more?",
   plan: "Hi, I'm interested in the {name} care plan. Could you tell me more?",
-  float: "Hi, I have a question about Cache & Carry.",
+  float: "Hi, I have a question about Vibe & Pixel.",
   founding: "Hi, I'd like one of the founding places: a Starter site for {price}. Is one still free?",
 };
 

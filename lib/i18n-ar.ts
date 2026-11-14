@@ -3,7 +3,7 @@
  * Register: clear Modern Standard Arabic as UAE businesses write it, with the everyday words owners use
  * (واتساب، النطاق/الدومين، أونلاين is avoided). Western digits (0-9) and "د.إ" for prices, as on UAE receipts.
  * {name}-style placeholders are filled in at render time; keep them exactly as they are.
- * The brand "Cache & Carry", the demo site names and "Google", "SSL", "Shopify" stay in Latin script.
+ * The brand "Vibe & Pixel", the demo site names and "Google", "SSL", "Shopify" stay in Latin script.
  * Package names are nouns so they read after باقة (البداية، الأعمال، الاحتراف، المتجر); care plans after خطة (التشغيل، رعاية+، النمو).
  * Terms: "quote" is always عرض سعر, "confirmed in writing" is يُؤكَّد كتابيًا, "domain" is النطاق (glossed الدومين once).
  * Brand and platform names stay Latin (Google, SSL, Shopify); إنستغرام and واتساب are written in Arabic, as UAE sites do.
@@ -13,7 +13,7 @@
  */
 export const ar: Record<string, string> = {
   // ---- shared ----
-  "Cache & Carry": "Cache & Carry",
+  "Vibe & Pixel": "Vibe & Pixel",
   WhatsApp: "واتساب",
   "Chat on WhatsApp": "تواصل معنا على واتساب",
   "Ask on WhatsApp": "اسألنا على واتساب",
@@ -22,8 +22,6 @@ export const ar: Record<string, string> = {
   Terms: "الشروط والأحكام",
   "Privacy (English)": "سياسة الخصوصية (بالإنجليزية)",
   "Terms (English)": "الشروط والأحكام (بالإنجليزية)",
-  "Working name, not yet registered": "اسم مبدئي، غير مسجّل بعد",
-  "© Cache & Carry · Working name, not yet registered": "© Cache & Carry · اسم مبدئي، غير مسجّل بعد",
   Legal: "روابط قانونية",
 
   // ---- navigation ----
@@ -183,7 +181,7 @@ export const ar: Record<string, string> = {
   // ---- FAQ ----
   "Before you message us.": "قبل أن تراسلنا.",
   "Quick answers. Tap a card to open it.": "إجابات سريعة. اضغط على أي بطاقة لفتحها.",
-  "Cache & Carry · FAQ": "Cache & Carry · الأسئلة الشائعة",
+  "Vibe & Pixel · FAQ": "Vibe & Pixel · الأسئلة الشائعة",
   "Still have a question?": "عندك سؤال آخر؟",
   "Filed under {tab} · {no}": "ضمن: {tab} · {no}",
   "Q.": "س.",
@@ -366,7 +364,7 @@ export const ar: Record<string, string> = {
     "مرحبًا، أرغب في البدء بباقة البداية. هل يمكنكم اقتراح ما يحتاجه نشاطي أيضًا؟",
   "Hi, I'm interested in the {name} package. Could you tell me more?": "مرحبًا، أنا مهتم بباقة {name}. هل يمكن أن تخبروني بالمزيد؟",
   "Hi, I'm interested in the {name} care plan. Could you tell me more?": "مرحبًا، أنا مهتم بخطة الرعاية «{name}». هل يمكن أن تخبروني بالمزيد؟",
-  "Hi, I have a question about Cache & Carry.": "مرحبًا، عندي سؤال عن Cache & Carry.",
+  "Hi, I have a question about Vibe & Pixel.": "مرحبًا، عندي سؤال عن Vibe & Pixel.",
   "Hi, I'd like one of the founding places: a Starter site for {price}. Is one still free?":
     "مرحبًا، أرغب في أحد أماكن عرض الافتتاح: موقع باقة البداية بسعر {price}. هل ما زال هناك مكان متاح؟",
   "Hi, I'd like a quote for a bigger site or an online store.": "مرحبًا، أرغب في عرض سعر لموقع أكبر أو متجر إلكتروني.",
@@ -382,10 +380,10 @@ export const ar: Record<string, string> = {
   "My choices: {link}": "اختياراتي: {link}",
 
   // ---- page titles and 404 ----
-  "Cache & Carry · Websites for small shops in Sharjah and Dubai": "Cache & Carry · مواقع إلكترونية للمحلات الصغيرة في الشارقة ودبي",
+  "Vibe & Pixel · Websites for small shops in Sharjah and Dubai": "Vibe & Pixel · مواقع إلكترونية للمحلات الصغيرة في الشارقة ودبي",
   "Websites and Google listings for small shops in Sharjah and Dubai, in English and Arabic. Starter sites live in 5 working days, then kept up to date for a monthly fee.":
     "مواقع إلكترونية وملفات تجارية على Google للمحلات الصغيرة في الشارقة ودبي، بالعربية والإنجليزية. موقع باقة البداية جاهز خلال 5 أيام عمل، ثم نحافظ على تحديثه مقابل رسوم شهرية.",
-  "Build your estimate · Cache & Carry": "احسب تكلفة موقعك · Cache & Carry",
+  "Build your estimate · Vibe & Pixel": "احسب تكلفة موقعك · Vibe & Pixel",
   "Pick a website package, add what you need and see the total in AED, then send it to us on WhatsApp.":
     "اختر باقة موقعك، وأضف ما تحتاجه، وشاهد الإجمالي بالدرهم، ثم أرسله لنا على واتساب.",
   "This page is not here.": "هذه الصفحة غير موجودة.",

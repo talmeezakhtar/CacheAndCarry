@@ -6,6 +6,7 @@ import { Check, ChevronDown, Link2, Minus, Plus, X } from "lucide-react";
 import { addOns as menu, carePlans, founding as offer, packages, paymentTerms, site, wa, type AddOn } from "@/lib/site";
 import { followPages, message, needsQuote, quoteReason, total, type Line } from "@/lib/quote";
 import { useI18n } from "@/components/locale-provider";
+import { bandOf } from "@/lib/analytics/events";
 
 /*
  * Price builder (PDF 6.9). Choices on the left, an itemised receipt on the right that stays in view
@@ -21,7 +22,7 @@ const choices = [
 ] as const;
 type Key = (typeof choices)[number]["key"];
 /** Other parts of the page (the package comparison) pick a package by sending this event with the choice's key. */
-export const PICK_PACKAGE = "cc:pick-package";
+export const PICK_PACKAGE = "vp:pick-package";
 export type PickPackage = Key;
 const SELF = "self"; // host it yourself, no care plan
 
@@ -168,6 +169,13 @@ export function PriceBuilder() {
   const send = (compact = false) => (
     <a
       href={wa(text)}
+      // analytics: the estimate's size and shape, never the name, area or exact total
+      data-track="builder_send"
+      data-package={pick}
+      data-addons={chosen.length}
+      data-band={bandOf(sum)}
+      data-care={plan ? plan.label : "none"}
+      data-founding={String(isFounding)}
       target="_blank"
       rel="noopener noreferrer"
       className={`inline-flex min-h-12 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-surface font-bold text-ink transition-[transform,background-color] hover:bg-white active:scale-[0.98] ${compact ? "px-4 text-sm" : "px-6"}`}

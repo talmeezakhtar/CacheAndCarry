@@ -15,7 +15,7 @@ export function GET() {
 
 > Websites and Google listings for small businesses in Sharjah and Dubai (UAE), in English and Arabic. Fixed, published prices; every enquiry happens on WhatsApp; the client owns the domain. A one-page Starter site goes live ${site.delivery} after we have the content and payment.
 
-${site.name} is a small web studio (working name, not yet registered). It builds websites for small businesses such as shops, cafés, salons, boutiques and restaurants, then keeps them running for a monthly fee. There is no contact form: enquiries start with a pre-filled WhatsApp message to ${site.phone}.
+${site.name} is a small web studio. It builds websites for small businesses such as shops, cafés, salons, boutiques and restaurants, then keeps them running for a monthly fee. There is no contact form: enquiries start with a pre-filled WhatsApp message to ${site.phone}.
 
 ## Pages
 

@@ -6,6 +6,7 @@ import { addOns, included, packages, paymentTerms, site } from "@/lib/site";
 import { QUOTE_THRESHOLD } from "@/lib/quote";
 import type { I18n } from "@/lib/i18n";
 import { useI18n } from "@/components/locale-provider";
+import { track } from "@/lib/analytics/client";
 import { PICK_PACKAGE, type PickPackage } from "@/components/price-builder";
 
 /*
@@ -93,6 +94,10 @@ export function PackageDiff() {
       plans={plans}
       groups={groups}
       defaultPair={["starter", "business"]}
+      onPairChange={([a, b]) => {
+        const name = (id: string) => packages.find((p) => p.label.toLowerCase() === id)?.label ?? "Quote";
+        track("compare_pick", { pair: `${name(a)}/${name(b)}` });
+      }}
       className="max-w-none"
       labels={{
         picker: t("Choose two packages to compare"),

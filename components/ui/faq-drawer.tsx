@@ -1,14 +1,15 @@
 import { i18n, type Locale } from "@/lib/i18n";
 
 /*
- * FAQ as a card-index drawer (TACTILE UI, cut 4), adapted for Cache & Carry:
+ * FAQ as a card-index drawer (TACTILE UI, cut 4), adapted for Vibe & Pixel:
  * - plain server-rendered JSX instead of an innerHTML mount, so the answers are in the HTML (SEO, FAQPage)
  * - Moss Light tokens, one finish (the site has no dark mode), and the site fonts (Cormorant title, Manrope text)
  *   at reading sizes, instead of 100 KB of embedded base64 fonts and a monospace "typed" face
  * - native <details name>: one card open at a time, no JavaScript at all
  */
 
-type Card = { tab: string; q: string; a: string };
+/** id: a fixed English key for the card (analytics), whatever language the tab is shown in. */
+type Card = { id?: string; tab: string; q: string; a: string };
 
 const STATIONS = [0.04, 0.37, 0.7]; // tabs staggered along the top edge, as a filing clerk does
 
@@ -47,7 +48,7 @@ export function FaqDrawer({
           {/* in the sticky head, so the way to ask stays in view while the cards scroll */}
           <div className="fq-ask">
             <p className="fq-note">{askNote}</p>
-            <a className="fq-key" href={askHref} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+            <a className="fq-key" data-track="faq" href={askHref} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
               {askLabel}
             </a>
           </div>
@@ -59,6 +60,7 @@ export function FaqDrawer({
                 <details
                   key={c.q}
                   name="faq"
+                  data-tab={c.id ?? c.tab}
                   className="fq-card"
                   open={i === 0}
                   style={{ "--depth": n <= 1 ? 0 : (n - 1 - i) / (n - 1), "--tab-at": STATIONS[i % 3] } as React.CSSProperties}

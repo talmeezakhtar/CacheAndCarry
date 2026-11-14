@@ -34,6 +34,10 @@
   --color-chart-2: var(--color-accent);
   --color-chart-3: var(--color-ink);
   --color-chart-5: var(--color-ochre-deep);
+  --color-secondary: var(--color-sage-wash);
+  --color-secondary-foreground: var(--color-ink);
+  --color-popover: var(--color-surface);
+  --color-input: var(--color-surface);
 }
 
 html {

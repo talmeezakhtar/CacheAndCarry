@@ -1,4 +1,4 @@
-# Cache & Carry: launch checklist
+# Vibe & Pixel: launch checklist
 
 Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below point into it) and
 `cache_carry_decisions_log.xlsx` (confirmed decisions, 13 Nov 2026). Prices live in `lib/site.ts` and `lib/quote.ts`;
@@ -15,8 +15,9 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 - Price builder: Starter by default, 16 add-ons, care plan and first-year total, estimate kept in the page link; over AED 1,000 or 8 pages the figure stays and is confirmed in a written quote; nothing charged online (6.1, 6.9).
 - Pre-filled WhatsApp messages per button and per plan (5).
 - FAQ "Before you message us": ownership, edits, what we need, Arabic, payment, plan length, no guaranteed rankings, what we don't build (4.8, 9).
-- Metadata, Open Graph, X card, theme colour, canonical, sitemap, robots, ProfessionalService and FAQPage structured data, no price markup (2).
-- Footer copyright: "Working name, not yet registered" (2).
+- Metadata, Open Graph, X card, theme colour, canonical, sitemap with English/Arabic pairs, robots, structured data (business, offers, FAQ, breadcrumbs), `llms.txt` (2).
+- VP monogram favicon, Apple icon and a typographic share card (no photo).
+- Footer copyright: "© Vibe & Pixel". The "Working name, not yet registered" line was removed at the owner's request (14 Nov 2026); the name is still unregistered (see Still open, 2).
 - WhatsApp number +971 50 348 2765 on every button (`site.whatsapp`).
 - Confirmed terms on the site: Starter paid in full upfront, bigger builds 50/50, care plans 3-month minimum then monthly, no VAT shown (not VAT-registered), Arabic AED 149 per page with client-approved translation.
 - Privacy policy (`/privacy`) and terms of service (`/terms`), written from how the site and business actually work.
@@ -26,12 +27,11 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 | What | Why | PDF |
 | --- | --- | --- |
 | Legal review of `/privacy` and `/terms` | Written in plain professional English; a UAE lawyer should review against the PDPL (Federal Decree-Law No. 45 of 2021) before launch. Confirm the policy commitments: 12-month deletion of enquiries, 90-day deletion after work ends, 30-day response to data requests, two-step sign-in on our accounts, 14-day late-payment pause, build refund rule | 2, 10 |
-| Analytics with WhatsApp click events | Not chosen yet; event names are listed in section 4 | 2, 4 |
+| Analytics with WhatsApp click events | **Built (own tool).** Cookie-free events on our own Postgres (`lib/analytics`), private dashboard at `/admin`. To switch on: create a free Neon (or Supabase) Postgres, set `DATABASE_URL`, `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` on the host (see `.env.example`), run `npm run db:setup` once. Privacy policy sections 2, 3 and 7 updated; include them in the UAE legal review | 2, 4 |
 | Arabic version at `/ar` with `dir="rtl"`, hreflang, sitemap entry | **Built.** Homepage and `/ar/estimate` are live in Arabic; copy in `lib/i18n-ar.ts`, reviewed once by an editing pass. Still to do: a native Arabic speaker reads the live pages and the client approves the copy (decisions log #8); privacy and terms in Arabic after the UAE legal review | 1, 2, 3 |
 | Presence pack (AED 175) on the site | Confirmed to keep (decisions log #9): Google Business Profile, WhatsApp catalogue up to 10 items, photos, local search words; credited against a Starter within 60 days. Not on the site yet | 6.4 |
-| Real hero photo (with written permission) and og:image | Placeholder only; no share image until then | 2, 4.3 |
-| Favicon (C&C monogram) | Not designed | 2 |
-| Domain | `cacheandcarry.ae` is a placeholder, availability not checked. Set `NEXT_PUBLIC_SITE_URL` to the real domain in the host's environment settings | 1, 12 |
+| Real hero video or photo (with written permission) | **Blocks launch.** The hero still uses the Prisma demo clip and its frame (`public/hero/`), which are not ours to use. Replace them, or switch the hero to a still image | 2, 4.3 |
+| Domain and hosting | Plan: Hostinger Unlimited (Node.js web app) with `vibeandpixel.com`, database stays on Neon. Set `NEXT_PUBLIC_SITE_URL`, `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` in hPanel | 1, 12 |
 
 ## Decided (decisions log, 13 Nov 2026)
 
@@ -50,8 +50,8 @@ Sources: `cache_carry_full_project_details.pdf` (17 pages; section numbers below
 
 ## Still open (from the decisions log)
 
-1. **Domain**: check `cacheandcarry.ae` (and `.com`) before printing or registering.
-2. **Trade name and trademark**: search the UAE registers for "Cache & Carry". The footer keeps "Working name, not yet registered" until then.
+1. **Domain**: check `vibeandpixel.com` (and `.com`) before printing or registering.
+2. **Trade name and trademark**: search the UAE registers for "Vibe & Pixel". Register it before printing anything with the name; the site no longer says it is a working name.
 3. **Accountant**: confirm the 100% Starter rule and the 50/50 terms (second half before go-live), and the VAT wording once registered.
 4. **Measure the first three Starter builds**: fix the template if any run past about 4.5 hours.
 5. **Care+ review**: track take-up for 60 days; trim included edits rather than raise the price.

@@ -8,8 +8,8 @@ import { addOns, carePlans, founding, site } from "@/lib/site";
 // revisions and domain ownership (PDF 6). Prices come from lib/site.ts, so they stay in step with the rest of the site.
 // Have a UAE lawyer review before launch.
 export const metadata: Metadata = {
-  title: "Terms of service | Cache & Carry",
-  description: "The terms for website builds and monthly care plans from Cache & Carry: quotes, payment, delivery, revisions, ownership and cancellation.",
+  title: "Terms of service | Vibe & Pixel",
+  description: "The terms for website builds and monthly care plans from Vibe & Pixel: quotes, payment, delivery, revisions, ownership and cancellation.",
   alternates: { canonical: "/terms" },
 };
 

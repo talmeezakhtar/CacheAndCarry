@@ -59,6 +59,7 @@ const carePlan = ({ t, money }: I18n, p: (typeof carePlans)[number], yearly: boo
     ctaLabel: t("Ask about {plan}", { plan: t(p.label) }),
     ctaHref: wa(t(messages.plan, { name: t(p.label) })),
     ctaDark: i === 1,
+    trackPlan: p.label,
     features: p.items.map((f) => t(f)),
     // yearly is prepaid and not refunded for unused months (terms); monthly has the 3-month minimum
     footerNote: t(yearly ? "12 months, paid upfront" : "3-month minimum"),
@@ -206,7 +207,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 <h3 className="font-heading text-3xl">{t("3. Build your estimate")}</h3>
                 <p className="mt-2 max-w-[52ch] text-surface/80">
                   {t("Pick a package, tick the extras and see the total, then send it to us on WhatsApp. Not sure?")}{" "}
-                  <a href={wa(t(messages.starter))} {...ext} className="font-bold text-surface underline decoration-sage-light decoration-2 underline-offset-4 hover:decoration-surface">
+                  <a href={wa(t(messages.starter))} {...ext} data-track="starter_link" className="font-bold text-surface underline decoration-sage-light decoration-2 underline-offset-4 hover:decoration-surface">
                     {t("Start with Starter")}
                   </a>
                   .
@@ -227,10 +228,10 @@ export function HomePage({ locale }: { locale: Locale }) {
         <FaqDrawer
           id="faq"
           locale={locale}
-          cards={faqs.map((f) => ({ tab: t(f.tab), q: t(f.q), a: t(f.a) }))}
+          cards={faqs.map((f) => ({ id: f.tab, tab: t(f.tab), q: t(f.q), a: t(f.a) }))}
           title={t("Before you message us.")}
           lead={t("Quick answers. Tap a card to open it.")}
-          drawer={t("Cache & Carry · FAQ")}
+          drawer={t("Vibe & Pixel · FAQ")}
           askNote={t("Still have a question?")}
           askLabel={t("Ask on WhatsApp")}
           askHref={wa(t(messages.general))}
@@ -244,7 +245,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         palette={{ background: "#17211b", ink: "#fcfcfa", accent: "#3f6b3a" }} /* ink, surface, accent: the footer draws with raw values */
         tagline={t("A Starter site online in {delivery}.", { delivery: t(site.delivery) })}
         blurb={t("Websites for small businesses in Sharjah and Dubai, in English and Arabic. Built by one studio, with a real person on WhatsApp.")}
-        copyright={t("© Cache & Carry · Working name, not yet registered")}
+        copyright={`© ${site.name}`}
         columns={[
           { title: t("Our work"), links: demos.map((d) => ({ label: d.name, href: "#work" })) },
           { title: t("Help"), links: [{ label: t("How it works"), href: "#how" }, { label: t("Prices"), href: "#prices" }, { label: t("FAQ"), href: "#faq" }] },

@@ -47,7 +47,7 @@ function Ticket({ pkg, index }: { pkg: (typeof packages)[number]; index: number 
           tilt={{}}
           width={width}
           name={name}
-          presenter="Cache & Carry"
+          presenter="Vibe & Pixel"
           event={t("Build package")}
           venue={t(pkg.note)}
           dates={pkg.price > QUOTE_THRESHOLD ? t("quoted in writing") : t(paymentTerms(pkg.label)).toLowerCase()}
@@ -80,9 +80,15 @@ export function PackageTickets() {
   return (
     <div className="mt-6 grid gap-x-8 gap-y-12 md:grid-cols-2">
       {packages.map((p, i) => (
-        <article key={p.label}>
+        <article key={p.label} data-track="ticket" data-package={p.label}>
           <h4 className="sr-only">{t(p.label)}</h4>
-          <Link href={path(estimateHref(p.label))} aria-label={t("Build an estimate with {name}", { name: t(p.label) })} className="block rounded-2xl">
+          <Link
+            href={path(estimateHref(p.label))}
+            aria-label={t("Build an estimate with {name}", { name: t(p.label) })}
+            data-event="ticket_click"
+            data-package={p.label}
+            className="block rounded-2xl"
+          >
             <Ticket pkg={p} index={i} />
           </Link>
           {/* The ticket prints its price sideways on the stub; here it is again, flat and readable. */}
@@ -107,6 +113,8 @@ export function PackageTickets() {
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
             <Link
               href={path(estimateHref(p.label))}
+              data-event="ticket_click"
+              data-package={p.label}
               className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-6 font-bold text-surface transition-colors hover:bg-ink/85 active:scale-[0.98]"
             >
               {t("Build your estimate")}

@@ -1,6 +1,6 @@
-# Cache & Carry
+# Vibe & Pixel
 
-Marketing site for Cache & Carry: websites and Google listings for small businesses in Sharjah and Dubai,
+Marketing site for Vibe & Pixel: websites and Google listings for small businesses in Sharjah and Dubai,
 priced in the open, with every enquiry going to a pre-filled WhatsApp message. Next.js (App Router) and Tailwind.
 
 ## Run it

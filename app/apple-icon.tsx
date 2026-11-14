@@ -1,16 +1,11 @@
 import { ImageResponse } from "next/og";
+import { BrandMark } from "@/components/brand-mark";
 
-// Home-screen icon for iPhone and iPad: the same C&C monogram as app/icon.svg, as a 180px PNG.
+// Home-screen icon for iPhone and iPad: the VP mark (components/brand-mark.tsx) as a 180px PNG.
+// Square corners: iOS rounds them itself.
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
 export default function AppleIcon() {
-  return new ImageResponse(
-    (
-      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#17211b", color: "#fcfcfa", fontSize: 76, fontWeight: 700, letterSpacing: -3 }}>
-        C<span style={{ color: "#b9c79e" }}>&amp;</span>C
-      </div>
-    ),
-    size,
-  );
+  return new ImageResponse(<BrandMark size={180} radius={0} />, size);
 }

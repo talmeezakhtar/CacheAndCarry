@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { LocaleProvider } from "@/components/locale-provider";
+import { Analytics } from "@/components/analytics";
 import { shareImage, site } from "@/lib/site";
 import "../globals.css";
 
@@ -10,7 +11,7 @@ const sans = Manrope({ variable: "--font-manrope", subsets: ["latin"] });
 const serif = Cormorant_Garamond({ variable: "--font-cormorant", subsets: ["latin"], weight: ["600"] });
 
 // PDF section 2. No og:image until a real hero photo is agreed. The Arabic site is at /ar (app/ar).
-const title = "Cache & Carry · Websites for small shops in Sharjah and Dubai";
+const title = "Vibe & Pixel · Websites for small shops in Sharjah and Dubai";
 const description =
   "Websites and Google listings for small shops in Sharjah and Dubai, in English and Arabic. Starter sites live in 5 working days, then kept up to date for a monthly fee.";
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <LocaleProvider locale="en">{children}</LocaleProvider>
+        <Analytics />
       </body>
     </html>
   );

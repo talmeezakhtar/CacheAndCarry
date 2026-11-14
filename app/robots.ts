@@ -7,7 +7,11 @@ const aiCrawlers = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Cla
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: "*", allow: "/" }, { userAgent: aiCrawlers, allow: "/" }],
+    // the private dashboard and the analytics endpoint are not for crawlers
+    rules: [
+      { userAgent: "*", allow: "/", disallow: ["/admin", "/api/"] },
+      { userAgent: aiCrawlers, allow: "/", disallow: ["/admin", "/api/"] },
+    ],
     sitemap: new URL("/sitemap.xml", site.url).toString(),
     host: new URL(site.url).host,
   };

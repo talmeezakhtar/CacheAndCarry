@@ -1,5 +1,5 @@
 /**
- * Project Deck, original by Aakash Mehra, adapted for the Cache & Carry work section.
+ * Project Deck, original by Aakash Mehra, adapted for the Vibe & Pixel work section.
  *
  * A scroll-dealt deck of sites. As you scroll, the next card rises from below leaning toward
  * you and out of focus, then flattens and sharpens as it lands; the cards beneath sink back and dim.

@@ -14,7 +14,7 @@ Typical situation: the owner runs the business day to day, has no web team and o
 
 ## Product Purpose
 
-Cache & Carry builds websites and Google listings for small UAE businesses, in English and Arabic, then keeps them running for a monthly fee. The marketing site exists to let an owner see the work, understand the price and the rules, and start a conversation on WhatsApp with a pre-filled message.
+Vibe & Pixel builds websites and Google listings for small UAE businesses, in English and Arabic, then keeps them running for a monthly fee. The marketing site exists to let an owner see the work, understand the price and the rules, and start a conversation on WhatsApp with a pre-filled message.
 
 Success: an owner reaches the site, understands what they would get and roughly what it costs, and sends a WhatsApp message.
 
@@ -43,11 +43,12 @@ Four things, together, set it apart from other web studios:
 - Not offered: custom apps or software, paid ad campaigns, AI-visibility add-ons, guaranteed rankings, leads or sales.
 - Still open: domain, trade name and trademark, accountant sign-off on VAT and payment wording, same-day reply promise. See `LAUNCH-CHECKLIST.md`.
 - The Arabic site is built at `/ar` (homepage and price builder, right to left; copy in `lib/i18n-ar.ts`); it still needs a native Arabic speaker's read before launch, and the privacy and terms pages are English only.
-- Still to build: analytics, the presence pack on the site, own hero clip and share image, favicon, domain. Privacy and terms are written and need a UAE legal review.
+- Analytics is built in-house: cookie-free events stored in our own Postgres, private dashboard at `/admin` (needs `DATABASE_URL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`).
+- Still to build: the presence pack on the site, own hero clip and share image, favicon, domain. Privacy and terms are written and need a UAE legal review.
 
 ## Brand Commitments
 
-- Name: Cache & Carry, a working name not yet registered (the footer says so).
+- Name: Vibe & Pixel (renamed from Cache & Carry, whose domain was taken). Not registered yet; the footer shows only "© Vibe & Pixel" (owner's decision, 14 Nov 2026).
 - Run by a solo founder; the site speaks as "we" and does not name or picture the founder.
 - Voice: plain and honest. Say what is included and what is not, keep open decisions visibly open, and never overstate.
 

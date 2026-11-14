@@ -1,13 +1,14 @@
 import { ImageResponse } from "next/og";
 import { packages, site } from "@/lib/site";
 import { aed } from "@/lib/quote";
+import { BrandMark } from "@/components/brand-mark";
 
 /*
  * The preview card shown when the site is shared (WhatsApp, X, LinkedIn, iMessage). Type only, no photo: the
  * launch checklist keeps photos out until a real, permitted one exists. Facts come from lib/site.ts so they stay in step.
  * One card for both languages: next/og's built-in font has no Arabic letters, so the Arabic pages share this one.
  */
-export const alt = "Cache & Carry: websites for small businesses in Sharjah and Dubai, in English and Arabic";
+export const alt = "Vibe & Pixel: websites for small businesses in Sharjah and Dubai, in English and Arabic";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -17,9 +18,7 @@ export default function OpengraphImage() {
     (
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", background: "#f4f5f1", color: "#17211b", padding: "72px 80px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 72, height: 72, borderRadius: 16, background: "#17211b", color: "#fcfcfa", fontSize: 30, fontWeight: 700 }}>
-            C<span style={{ color: "#b9c79e" }}>&amp;</span>C
-          </div>
+          <BrandMark size={72} radius={16} />
           <div style={{ fontSize: 36, fontWeight: 700 }}>{site.name}</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>

@@ -33,7 +33,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false, // don't advertise the framework
-  // browsers still ask for /favicon.ico; answer with the C&C icon instead of a 404
+  // browsers still ask for /favicon.ico; answer with the V&P icon instead of a 404
   async rewrites() {
     return [{ source: "/favicon.ico", destination: "/apple-icon" }];
   },

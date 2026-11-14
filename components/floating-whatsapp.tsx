@@ -27,6 +27,7 @@ export function FloatingWhatsApp({ href }: { href: string }) {
   return (
     <a
       href={href}
+      data-track="floating"
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t("Chat on WhatsApp")}

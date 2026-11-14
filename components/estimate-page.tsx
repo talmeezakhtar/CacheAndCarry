@@ -13,7 +13,7 @@ import { estimateJsonLd, jsonLdHtml } from "@/lib/structured-data";
 // Tickets link here with ?p=starter|business|quote; the builder reads and keeps its choices in the URL.
 export const estimateMetadata = (locale: Locale): Metadata => {
   const { t, path } = i18n(locale);
-  const title = t("Build your estimate · Cache & Carry");
+  const title = t("Build your estimate · Vibe & Pixel");
   const description = t("Pick a website package, add what you need and see the total in AED, then send it to us on WhatsApp.");
   return {
     title,
@@ -53,7 +53,7 @@ export function EstimatePage({ locale }: { locale: Locale }) {
             <h1 className="mt-4 max-w-[16ch] font-heading text-[2.75rem] leading-[1.05] tracking-tight md:text-[4rem]">{t("Build your estimate.")}</h1>
             <p className="mt-5 max-w-[56ch] text-lg text-ink/80">
               {t("Pick a package, tick what you need and watch the total add up. Not sure where to start?")}{" "}
-              <a href={wa(t(messages.starter))} {...ext} className="font-bold text-ink underline decoration-accent decoration-2 underline-offset-4 hover:decoration-ink">
+              <a href={wa(t(messages.starter))} {...ext} data-track="starter_link" className="font-bold text-ink underline decoration-accent decoration-2 underline-offset-4 hover:decoration-ink">
                 {t("Start with Starter")}
               </a>
               .
@@ -72,7 +72,7 @@ export function EstimatePage({ locale }: { locale: Locale }) {
       </header>
 
       <main id="main" className={`${wrap} pb-16 pt-10 md:pb-28 md:pt-14`}>
-        <section aria-labelledby="compare-title" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
+        <section aria-labelledby="compare-title" data-section="compare" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
           <div>
             <h2 id="compare-title" className="font-heading text-2xl md:text-3xl">
               {t("Compare two packages")}
@@ -94,7 +94,6 @@ export function EstimatePage({ locale }: { locale: Locale }) {
             <Link href={path("/")} className="font-heading text-lg text-surface">
               {site.name}
             </Link>
-            <span className="ms-3">{t("Working name, not yet registered")}</span>
           </p>
           <nav aria-label={t("Legal")} className="flex gap-5">
             <Link href="/privacy" className="inline-flex min-h-11 items-center hover:text-surface">

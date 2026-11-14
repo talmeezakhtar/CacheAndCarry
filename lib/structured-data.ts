@@ -108,7 +108,7 @@ export const estimateJsonLd = (i: I18n) =>
       "@type": "WebPage",
       "@id": abs(i.path("/estimate")),
       url: abs(i.path("/estimate")),
-      name: i.t("Build your estimate · Cache & Carry"),
+      name: i.t("Build your estimate · Vibe & Pixel"),
       description: i.t("Pick a website package, add what you need and see the total in AED, then send it to us on WhatsApp."),
       inLanguage: i.locale,
       isPartOf: { "@id": ids.website },

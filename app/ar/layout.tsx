@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Amiri, IBM_Plex_Sans_Arabic } from "next/font/google";
 import { LocaleProvider } from "@/components/locale-provider";
+import { Analytics } from "@/components/analytics";
 import { shareImage, site } from "@/lib/site";
 import { translate } from "@/lib/i18n";
 import "../globals.css";
@@ -15,7 +16,7 @@ const sans = IBM_Plex_Sans_Arabic({ variable: "--font-manrope", subsets: ["arabi
 const serif = Amiri({ variable: "--font-cormorant", subsets: ["arabic", "latin"], weight: ["700"], preload: false });
 
 const t = (k: string) => translate("ar", k);
-const title = t("Cache & Carry · Websites for small shops in Sharjah and Dubai");
+const title = t("Vibe & Pixel · Websites for small shops in Sharjah and Dubai");
 const description = t(
   "Websites and Google listings for small shops in Sharjah and Dubai, in English and Arabic. Starter sites live in 5 working days, then kept up to date for a monthly fee.",
 );
@@ -44,6 +45,7 @@ export default function ArabicLayout({ children }: LayoutProps<"/ar">) {
           {t("Skip to content")}
         </a>
         <LocaleProvider locale="ar">{children}</LocaleProvider>
+        <Analytics />
       </body>
     </html>
   );
