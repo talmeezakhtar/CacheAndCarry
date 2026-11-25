@@ -1,5 +1,5 @@
 ---
-name: Cache & Carry
+name: Vibe & Pixel
 description: Websites and Google listings for small UAE businesses, priced in the open.
 colors:
   page: "#f4f5f1"
@@ -108,7 +108,7 @@ components:
     padding: "6px 8px 6px 20px"
 ---
 
-# Design System: Cache & Carry
+# Design System: Vibe & Pixel
 
 ## Overview
 

@@ -24,11 +24,20 @@ export const PAGE_LIMIT = 8;
 /** True when the estimate must be confirmed in a written quote: over AED 1,000 or more than 8 pages. */
 export const needsQuote = (sum: number | null, pages = 0) => (sum != null && sum > QUOTE_THRESHOLD) || pages > PAGE_LIMIT;
 
+/**
+ * Text for one language: t() turns an English template into the page's language and fills {slots}; money() prints a
+ * price. The English default needs no setup (lib/i18n builds the Arabic one); kept here so this file stays importable
+ * on its own by the tests.
+ */
+export type Fmt = { t: (key: string, vars?: Record<string, string | number>) => string; money: (n: number | null) => string };
+const fill = (s: string, vars?: Record<string, string | number>) => (vars ? s.replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m)) : s);
+export const EN: Fmt = { t: fill, money: (n) => aed(n) };
+
 /** Plain reason for the written quote, for the receipt and the message. */
-export const quoteReason = (sum: number | null, pages = 0) =>
-  [sum != null && sum > QUOTE_THRESHOLD && `over AED ${QUOTE_THRESHOLD.toLocaleString("en-US")}`, pages > PAGE_LIMIT && `more than ${PAGE_LIMIT} pages`]
+export const quoteReason = (sum: number | null, pages = 0, { t, money }: Fmt = EN) =>
+  [sum != null && sum > QUOTE_THRESHOLD && t("over {amount}", { amount: money(QUOTE_THRESHOLD) }), pages > PAGE_LIMIT && t("more than {n} pages", { n: PAGE_LIMIT })]
     .filter(Boolean)
-    .join(" and ");
+    .join(t(" and "));
 
 /**
  * Per-page add-ons (Arabic, copywriting) follow the site's page count: a count that matched the old page count moves
@@ -49,17 +58,29 @@ export type MessageOptions = { care?: Line | null; pages?: number; founding?: bo
  * Over AED 1,000 the figure is still sent (prices shown upfront), with a request for the written quote.
  * Prices carry no VAT: the business is not VAT-registered (add a VAT line here once it is).
  */
-export const message = (pkg: Line | null, addOns: Line[], name: string, area: string, { care, pages = 0, founding = false, link }: MessageOptions = {}) => {
-  const out = [pkg ? `Hi, I'm interested in the ${pkg.label} package. Could you tell me more?` : "Hi, I'd like a quote for a bigger site or an online store."];
-  if (name.trim()) out.push(`Business: ${name.trim()}`);
-  if (area.trim()) out.push(`Area: ${area.trim()}`);
+export const message = (
+  pkg: Line | null,
+  addOns: Line[],
+  name: string,
+  area: string,
+  { care, pages = 0, founding = false, link }: MessageOptions = {},
+  fmt: Fmt = EN,
+) => {
+  const { t, money } = fmt;
+  const out = [pkg ? t("Hi, I'm interested in the {name} package. Could you tell me more?", { name: pkg.label }) : t("Hi, I'd like a quote for a bigger site or an online store.")];
+  if (name.trim()) out.push(t("Business: {name}", { name: name.trim() }));
+  if (area.trim()) out.push(t("Area: {area}", { area: area.trim() }));
   if (pkg) {
-    if (founding) out.push(`Founding place: yes, ${aed(pkg.price)} in return for a short testimonial.`);
-    if (addOns.length) out.push("Add-ons: " + addOns.map((a) => `${a.label} (${aed(a.price)})`).join(", "));
+    if (founding) out.push(t("Founding place: yes, {price} in return for a short testimonial.", { price: money(pkg.price) }));
+    if (addOns.length) out.push(t("Add-ons: {list}", { list: addOns.map((a) => `${a.label} (${money(a.price)})`).join(t(", ")) }));
     const sum = total([pkg, ...addOns]);
-    out.push(needsQuote(sum, pages) ? `Estimate: ${aed(sum)}. It's ${quoteReason(sum, pages)}, so please send a written quote.` : `Estimate: ${aed(sum)}.`);
+    out.push(
+      needsQuote(sum, pages)
+        ? t("Estimate: {sum}. It's {reason}, so please send a written quote.", { sum: money(sum), reason: quoteReason(sum, pages, fmt) })
+        : t("Estimate: {sum}.", { sum: money(sum) }),
+    );
   }
-  if (care !== undefined) out.push(care ? `Care plan: ${care.label}, ${aed(care.price)} a month.` : "Care plan: none, I'll host it myself.");
-  if (link) out.push(`My choices: ${link}`);
+  if (care !== undefined) out.push(care ? t("Care plan: {label}, {price} a month.", { label: care.label, price: money(care.price) }) : t("Care plan: none, I'll host it myself."));
+  if (link) out.push(t("My choices: {link}", { link }));
   return out.join("\n");
 };

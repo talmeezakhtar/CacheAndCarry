@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics/client";
 
 /*
- * Pricing 6, adapted for Cache & Carry. Changes from the original:
+ * Pricing 6, adapted for Vibe & Pixel. Changes from the original:
  * - site palettes (sage, olive, ochre) instead of blue/purple/amber/teal/rose/slate, no dark: variants
  * - lucide's Check instead of Hugeicons, and a plain link instead of the shadcn Button (no new packages)
  * - the two tabs are generic (here: Monthly and Yearly) and both plan sets are required props
@@ -30,6 +31,8 @@ export type Plan6 = {
   footerNote?: string;
   footerDesc?: string;
   ctaDark?: boolean;
+  /** English plan name, for analytics (data-plan on the call to action). */
+  trackPlan?: string;
 };
 
 const CARD_PALETTES: Record<Palette6, { base: string }> = {
@@ -78,6 +81,8 @@ function PlanCard({ plan }: { plan: Plan6 }) {
 
           <a
             href={plan.ctaHref}
+            data-track="care_plan"
+            data-plan={plan.trackPlan}
             {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             className={cn(
               "inline-flex min-h-11 w-full items-center justify-center rounded-full px-4 font-bold transition-colors active:scale-[0.98]",
@@ -117,6 +122,7 @@ export default function Pricing6({
   secondLabel,
   title,
   subtitle,
+  groupLabel = "Billing",
 }: {
   firstPlans: Plan6[];
   secondPlans: Plan6[];
@@ -124,6 +130,8 @@ export default function Pricing6({
   secondLabel: string;
   title: string;
   subtitle?: string;
+  /** Accessible name of the Monthly / Yearly switch. */
+  groupLabel?: string;
 }) {
   const [second, setSecond] = useState(false);
   const plans = second ? secondPlans : firstPlans;
@@ -135,7 +143,7 @@ export default function Pricing6({
           <h3 className="font-heading text-3xl">{title}</h3>
           {subtitle && <p className="text-ink/80">{subtitle}</p>}
         </div>
-        <div role="group" aria-label="Billing" className="flex items-center gap-0.5 self-start rounded-full border border-line bg-surface p-1 sm:self-auto">
+        <div role="group" aria-label={groupLabel} className="flex items-center gap-0.5 self-start rounded-full border border-line bg-surface p-1 sm:self-auto">
           {[firstLabel, secondLabel].map((label, i) => {
             const on = (i === 1) === second;
             return (
@@ -143,7 +151,10 @@ export default function Pricing6({
                 key={label}
                 type="button"
                 aria-pressed={on}
-                onClick={() => setSecond(i === 1)}
+                onClick={() => {
+                  setSecond(i === 1);
+                  track("care_toggle", { billing: i === 1 ? "yearly" : "monthly" });
+                }}
                 className={cn(
                   "min-h-11 rounded-full px-4 text-sm font-bold transition-colors duration-200",
                   on ? "bg-ink text-surface" : "text-ink/80 hover:text-ink",

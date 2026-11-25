@@ -3,15 +3,16 @@ import { LegalPage, type LegalSection } from "@/components/legal-page";
 import { site } from "@/lib/site";
 
 // Written for how the site actually works: no forms, no cookies, no analytics; enquiries happen on WhatsApp.
-// If analytics, a contact form or cookies are added later, sections 2, 3 and 9 must be updated first.
+// Analytics (lib/analytics) is described in sections 2, 3 and 7; change them first if what it records changes.
+// If a contact form or cookies are added later, sections 2, 3 and 9 must be updated first.
 // Have a UAE lawyer review before launch (PDPL: Federal Decree-Law No. 45 of 2021).
 export const metadata: Metadata = {
-  title: "Privacy policy | Cache & Carry",
-  description: "How Cache & Carry collects, uses and protects personal data when you visit this website or work with us on WhatsApp.",
+  title: "Privacy policy | Vibe & Pixel",
+  description: "How Vibe & Pixel collects, uses and protects personal data when you visit this website or work with us on WhatsApp.",
   alternates: { canonical: "/privacy" },
 };
 
-const UPDATED = "13 November 2026";
+const UPDATED = "14 November 2026";
 
 const sections: LegalSection[] = [
   {
@@ -35,9 +36,18 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          <strong>When you visit this website.</strong> The site has no contact forms, no accounts, no advertising trackers and no analytics. It does not set
-          cookies. Like every website, our hosting provider automatically records basic technical information when a page is requested (your IP address, browser
-          type, the page visited and the time) to keep the site secure and working.
+          <strong>When you visit this website.</strong> The site has no contact forms, no accounts and no advertising trackers, and it does not set cookies on
+          your device. Like every website, our hosting provider automatically records basic technical information when a page is requested (your IP address,
+          browser type, the page visited and the time) to keep the site secure and working.
+        </p>
+        <p>
+          <strong>Our own visit statistics.</strong> To see how the site is used, it counts anonymous events on our own server: pages viewed, which sections
+          were scrolled to, which WhatsApp buttons and FAQ questions were tapped, and the package, size band and care plan of an estimate you send from the
+          price builder. Each event carries the page, the language, the website you came from (its domain only), campaign tags in the link, your device type
+          (phone, tablet or desktop) and your country or emirate where our host provides it. To count visits we compute a code from your IP address, browser and
+          a random value that changes every day; the code cannot be turned back into your IP address or linked across days, and your IP address itself is not
+          stored. We never record the business name or area you type, your messages, or your phone number. No other company receives these statistics. If your
+          browser sends the Global Privacy Control signal, nothing is counted.
         </p>
         <p>
           <strong>When you use the price builder.</strong> Your choices are kept in the page address so the estimate survives a refresh or can be shared. The
@@ -66,6 +76,7 @@ const sections: LegalSection[] = [
           <li>build, launch and maintain your website and Google listing;</li>
           <li>invoice you, keep accounting records and meet our legal and tax obligations;</li>
           <li>keep this website and our client accounts secure;</li>
+          <li>understand, from anonymous statistics, which parts of this website help visitors and which do not, and improve it;</li>
           <li>show your finished website in our portfolio or publish your testimonial, only where you have agreed to this.</li>
         </ul>
         <p>We do not sell personal data, and we do not use it for advertising or send you marketing messages you have not asked for.</p>
@@ -119,6 +130,7 @@ const sections: LegalSection[] = [
         <li>Client records, quotes and invoices are kept for as long as UAE commercial and tax law requires.</li>
         <li>Website content and account access are kept while we work for you. When our work ends, we hand everything over and delete our working copies within 90 days.</li>
         <li>Technical logs kept by our hosting provider are deleted on its standard schedule.</li>
+        <li>Anonymous visit statistics are deleted after 13 months. The daily random value used to count visits is deleted after two days.</li>
       </ul>
     ),
   },
@@ -156,7 +168,7 @@ const sections: LegalSection[] = [
     title: "Changes to this policy",
     body: (
       <p>
-        We will update this policy if the way we handle data changes, for example if we add analytics to this website. The date at the top shows when it was last
+        We will update this policy if the way we handle data changes, for example if our visit statistics start recording something new. The date at the top shows when it was last
         changed. If a change affects you as a client, we will tell you on WhatsApp.
       </p>
     ),

@@ -1,17 +1,18 @@
 "use client"
 
+import { useI18n } from "@/components/locale-provider"
 import * as React from "react"
 import { wa } from "@/lib/site"
 
 /**
- * Doodle Crew Footer, adapted for Cache & Carry.
+ * Doodle Crew Footer, adapted for Vibe & Pixel.
  *
  * The wordmark is stamped across the footer in dry-brush ink, and a crew of hand-drawn characters
  * lives on the letters. Scroll it into view and it plays out like a short storyboard: the ground
  * line draws, the letters stamp down, the crew arrives, the doodles start to fall. Then every eye
  * follows the pointer, and a click on a character makes it hop and say its line.
  *
- * Changes from the original: defaults are Cache & Carry's content and links, the page passes the
+ * Changes from the original: defaults are Vibe & Pixel's content and links, the page passes the
  * dark night/cream/sand palette, and the food doodles and social links are gone.
  * No dependencies: every drawing is inline SVG, and the ink texture is an SVG filter.
  */
@@ -236,14 +237,14 @@ export interface DoodleCrewFooterProps {
 
 const PALETTE = { background: "#F6F5F1", ink: "#141A22", accent: "#047857" }
 
-// Letters: C0 A1 C2 H3 E4 _5 &6 _7 C8 A9 R10 R11 Y12
+// Letters: V0 I1 B2 E3 _4 &5 _6 P7 I8 X9 E10 L11 (the default wordmark, "VIBE & PIXEL")
 const DEFAULT_CREW: CrewMember[] = [
   { kind: "yeti", letter: 0, seat: "front", offset: -0.32, name: "Bruno", says: "Got a shop? We'll build its website." },
-  { kind: "bird", letter: 3, seat: "top", offset: -0.3, name: "Pip", says: "Starter sites: live in five working days." },
-  { kind: "kid", letter: 4, seat: "top", offset: -0.05, name: "Juno", says: "Your domain stays in your name." },
-  { kind: "ghost", letter: 6, seat: "behind", offset: 0, name: "Boo", says: "Boo! Every price is on the page." },
+  { kind: "bird", letter: 2, seat: "top", offset: -0.3, name: "Pip", says: "Starter sites: live in five working days." },
+  { kind: "kid", letter: 3, seat: "top", offset: -0.05, name: "Juno", says: "Your domain stays in your name." },
+  { kind: "ghost", letter: 5, seat: "behind", offset: 0, name: "Boo", says: "Boo! Every price is on the page." },
   { kind: "mushroom", letter: 9, seat: "front", offset: 0.1, scale: 0.95, name: "Morel", says: "English and Arabic, both." },
-  { kind: "cat", letter: 12, seat: "front", offset: 0.42, flip: true, name: "Patch", says: "Questions? Ask us on WhatsApp." },
+  { kind: "cat", letter: 11, seat: "front", offset: 0.42, flip: true, name: "Patch", says: "Questions? Ask us on WhatsApp." },
 ]
 
 const DEFAULT_COLUMNS: FooterColumn[] = [
@@ -519,13 +520,13 @@ const Link = ({ link, className }: { link: FooterLink; className?: string }) =>
   )
 
 export default function DoodleCrewFooter({
-  wordmark = "CACHE & CARRY",
-  brand = "Cache & Carry",
+  wordmark = "VIBE & PIXEL",
+  brand = "Vibe & Pixel",
   blurb = "Websites for small businesses in Sharjah and Dubai, in English and Arabic. Built by one studio, with a real person on WhatsApp.",
   tagline = "Your business online in 5 working days.",
   columns = DEFAULT_COLUMNS,
   actions = [],
-  copyright = "© Cache & Carry · Working name, not yet registered", // PDF 2: replace once the entity is registered
+  copyright = "© Vibe & Pixel",
   legal = [{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }],
   backToTop = true,
   crew = DEFAULT_CREW,
@@ -539,6 +540,8 @@ export default function DoodleCrewFooter({
   height = "560px",
   className,
 }: DoodleCrewFooterProps) {
+  // the page's language: speech bubbles and the two labels below are English source text, translated on /ar
+  const { t } = useI18n()
   const uid = React.useId().replace(/[^a-zA-Z0-9_-]/g, "")
   const word = wordmark.toUpperCase()
   const chars = React.useMemo(() => Array.from(word), [word])
@@ -943,6 +946,7 @@ export default function DoodleCrewFooter({
   return (
     <footer
       ref={rootRef}
+      data-track="footer"
       className={"dcf" + (className ? " " + className : "")}
       data-play={play || reduced ? "1" : "0"}
       data-interactive={interactive ? "1" : "0"}
@@ -971,7 +975,7 @@ export default function DoodleCrewFooter({
         </div>
         {blurb && <p className="dcf-blurb">{blurb}</p>}
         {columns.length > 0 && (
-          <nav className="dcf-cols" aria-label="Footer">
+          <nav className="dcf-cols" aria-label={t("Footer")}>
             {columns.map((col) => (
               <div className="dcf-col" key={col.title}>
                 <h3 className="dcf-coltitle">{col.title}</h3>
@@ -1080,10 +1084,11 @@ export default function DoodleCrewFooter({
               talking === p.i && p.m.says ? (
                 <div
                   key={p.i}
+                  dir="auto"
                   className={"dcf-bubble" + (p.x > view.x + view.w * 0.72 ? " is-left" : "")}
                   style={{ left: pct(p.x, view.x, view.w), top: pct(p.y + p.art.box.t * p.scale - 6, view.y, view.h) }}
                 >
-                  {p.m.says}
+                  {t(p.m.says)}
                 </div>
               ) : null,
             )}
@@ -1156,8 +1161,8 @@ export default function DoodleCrewFooter({
           </ul>
         )}
         {backToTop && (
-          <button type="button" className="dcf-totop" onClick={toTop} aria-label="Back to top">
-            <span>Back to top</span>
+          <button type="button" className="dcf-totop" onClick={toTop} aria-label={t("Back to top")}>
+            <span>{t("Back to top")}</span>
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
               <path d="M12 20 C11 14 12.5 9 12 4 M6 10 C8 8 10 6 12 4 C14 6 16 8 18.5 9.5" />
             </svg>
@@ -1193,6 +1198,7 @@ const CSS =
   ".dcf-squiggle path{fill:none;stroke:var(--dcf-accent);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .35s cubic-bezier(.4,0,.2,1)}" +
   ".dcf-link:hover .dcf-squiggle path,.dcf-link:focus-visible .dcf-squiggle path{stroke-dashoffset:0;opacity:1}" +
   // world
+  ".dcf-stage{direction:ltr}" +
   ".dcf-world{position:relative;flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(22px,4vw,48px) var(--dcf-pad) 0;max-width:1360px;width:100%;margin:0 auto}" +
   ".dcf-stage{position:relative;z-index:1}" +
   ".dcf-svg{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}" +
@@ -1247,7 +1253,7 @@ const CSS =
   ".dcf-btn:hover .dcf-icon{animation:dcf-wiggle .5s ease-in-out}" +
   // bar
   ".dcf-bar{position:relative;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:10px 26px;padding:18px var(--dcf-pad) 22px;max-width:1360px;width:100%;margin:0 auto;border-top:1.5px dashed var(--dcf-line);font-size:15px}" +
-  ".dcf-copy{color:var(--dcf-soft);margin-right:auto}" +
+  ".dcf-copy{color:var(--dcf-soft);margin-inline-end:auto}" +
   ".dcf-inline{display:flex;flex-wrap:wrap;gap:4px 18px}" +
   ".dcf-inline .dcf-link{font-size:15px}" +
   ".dcf-totop{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:15px;font-weight:700;padding:6px 14px;border-radius:999px;border:1.5px solid var(--dcf-ink);transition:transform .2s cubic-bezier(.3,1.5,.5,1)}" +
@@ -1288,6 +1294,6 @@ const CSS =
   "@keyframes dcf-bubble{from{opacity:0;scale:.6}to{opacity:1;scale:1}}" +
   "@keyframes dcf-wiggle{0%,100%{transform:none}30%{transform:rotate(-14deg) scale(1.15)}60%{transform:rotate(10deg)}}" +
   "@keyframes dcf-up{0%,100%{transform:none}50%{transform:translateY(-3px)}}" +
-  "@media (max-width:860px){.dcf-top{grid-template-columns:1fr;grid-template-rows:auto}.dcf-brand,.dcf-blurb,.dcf-cols{grid-column:1;grid-row:auto}.dcf-cols{margin-top:14px;row-gap:22px}.dcf-copy{width:100%;margin-right:0}}" +
+  "@media (max-width:860px){.dcf-top{grid-template-columns:1fr;grid-template-rows:auto}.dcf-brand,.dcf-blurb,.dcf-cols{grid-column:1;grid-row:auto}.dcf-cols{margin-top:14px;row-gap:22px}.dcf-copy{width:100%;margin-inline-end:0}}" +
   "@media (max-width:480px){.dcf-btn{height:44px;padding:0 16px 0 13px}.dcf-bubble{font-size:12px;padding:6px 10px}.dcf-totop span{display:none}}" +
   "@media (prefers-reduced-motion:reduce){.dcf *,.dcf *::before,.dcf *::after{animation:none!important;transition:none!important}.dcf .dcf-letter,.dcf .dcf-arrive,.dcf .dcf-word,.dcf .dcf-pop,.dcf .dcf-rise,.dcf .dcf-fade,.dcf .dcf-doodle-in{opacity:1!important}.dcf .dcf-draw{stroke-dashoffset:0!important}.dcf .dcf-dust{opacity:0!important}}"

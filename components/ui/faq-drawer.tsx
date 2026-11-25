@@ -1,18 +1,21 @@
+import { i18n, type Locale } from "@/lib/i18n";
+
 /*
- * FAQ as a card-index drawer (TACTILE UI, cut 4), adapted for Cache & Carry:
+ * FAQ as a card-index drawer (TACTILE UI, cut 4), adapted for Vibe & Pixel:
  * - plain server-rendered JSX instead of an innerHTML mount, so the answers are in the HTML (SEO, FAQPage)
  * - Moss Light tokens, one finish (the site has no dark mode), and the site fonts (Cormorant title, Manrope text)
  *   at reading sizes, instead of 100 KB of embedded base64 fonts and a monospace "typed" face
  * - native <details name>: one card open at a time, no JavaScript at all
  */
 
-type Card = { tab: string; q: string; a: string };
+/** id: a fixed English key for the card (analytics), whatever language the tab is shown in. */
+type Card = { id?: string; tab: string; q: string; a: string };
 
 const STATIONS = [0.04, 0.37, 0.7]; // tabs staggered along the top edge, as a filing clerk does
-const no = (i: number) => `Q.${String(i + 1).padStart(2, "0")}`;
 
 export function FaqDrawer({
   id,
+  locale = "en",
   cards,
   title,
   lead,
@@ -22,6 +25,7 @@ export function FaqDrawer({
   askHref,
 }: {
   id?: string;
+  locale?: Locale;
   cards: readonly Card[];
   title: string;
   lead: string;
@@ -31,6 +35,8 @@ export function FaqDrawer({
   askHref: string;
 }) {
   const n = cards.length;
+  const { t } = i18n(locale);
+  const no = (i: number) => `${t("Q.")}${String(i + 1).padStart(2, "0")}`;
   const external = /^https?:/.test(askHref);
   return (
     <section id={id} className="fq" aria-labelledby="fq-title">
@@ -42,7 +48,7 @@ export function FaqDrawer({
           {/* in the sticky head, so the way to ask stays in view while the cards scroll */}
           <div className="fq-ask">
             <p className="fq-note">{askNote}</p>
-            <a className="fq-key" href={askHref} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+            <a className="fq-key" data-track="faq" href={askHref} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
               {askLabel}
             </a>
           </div>
@@ -54,6 +60,7 @@ export function FaqDrawer({
                 <details
                   key={c.q}
                   name="faq"
+                  data-tab={c.id ?? c.tab}
                   className="fq-card"
                   open={i === 0}
                   style={{ "--depth": n <= 1 ? 0 : (n - 1 - i) / (n - 1), "--tab-at": STATIONS[i % 3] } as React.CSSProperties}
@@ -66,7 +73,7 @@ export function FaqDrawer({
                   </summary>
                   <div className="fq-face">
                     <p className="fq-a">{c.a}</p>
-                    <p className="fq-filed" aria-hidden>Filed under {c.tab} · {no(i)}</p>
+                    <p className="fq-filed" aria-hidden>{t("Filed under {tab} · {no}", { tab: c.tab, no: no(i) })}</p>
                   </div>
                 </details>
               ))}
@@ -176,7 +183,7 @@ const CSS = `
 .fq-card[open] .fq-mark::after { transform: rotate(0deg); }
 
 .fq-tab {
-  position: absolute; bottom: 100%; left: calc(var(--tab-at, 0) * 100%); height: 19px; padding: 3px 11px 0;
+  position: absolute; bottom: 100%; inset-inline-start: calc(var(--tab-at, 0) * 100%); height: 19px; padding: 3px 11px 0;
   border-radius: 5px 5px 0 0;
   background: linear-gradient(rgb(40 46 30 / var(--shade)), rgb(40 46 30 / var(--shade))), var(--fibre), var(--paper);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 -4px 7px -4px var(--drop);
@@ -193,7 +200,7 @@ const CSS = `
   background: repeating-linear-gradient(to bottom, transparent 0 25px, var(--rule) 25px 26px) 0 20px / 100% calc(100% - 42px) no-repeat;
 }
 .fq-a { max-width: 60ch; }
-.fq-filed { margin-top: 26px; font-size: 12px; letter-spacing: .06em; color: var(--type-2); text-align: right; }
+.fq-filed { margin-top: 26px; font-size: 12px; letter-spacing: .06em; color: var(--type-2); text-align: end; }
 
 .fq-front {
   display: grid; justify-items: center; gap: 10px; margin: 0 -12px; padding: 16px 0 18px;
@@ -232,7 +239,7 @@ const CSS = `
   .fq-edge { grid-template-columns: minmax(0, 1fr) auto; padding: 14px 14px 20px; font-size: 15px; line-height: 22px; }
   .fq-no { display: none; }
   .fq-tab { font-size: 10.5px; padding-inline: 8px; }
-  .fq-face { margin-inline: 14px; padding-left: 0; font-size: 15px; }
+  .fq-face { margin-inline: 14px; padding-inline-start: 0; font-size: 15px; }
   .fq-front { margin-inline: -8px; }
   .fq-ask { align-items: stretch; }
   .fq-key { justify-content: center; }
